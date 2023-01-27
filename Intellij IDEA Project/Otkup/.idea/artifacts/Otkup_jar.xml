@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Otkup:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Otkup_jar</output-path>
+    <root id="archive" name="Otkup.jar">
+      <element id="module-output" name="Otkup" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk-10.0.2/lib/src.zip" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk-10.0.2/lib/deploy.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk-10.0.2/lib/javaws.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk-10.0.2/lib/jrt-fs.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk-10.0.2/lib/plugin.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk-10.0.2/lib/java.jnlp.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk-10.0.2/lib/ant-javafx.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk-10.0.2/lib/javafx-swt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk-10.0.2/lib/jdk.deploy.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk-10.0.2/lib/jdk.javaws.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk-10.0.2/lib/jdk.plugin.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk-10.0.2/lib/plugin-legacy.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
