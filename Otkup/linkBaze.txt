@@ -1,1 +1,0 @@
-jdbc:sqlite:D:\\--OTKUP--\\testBaze\\glavnaBaza.db
