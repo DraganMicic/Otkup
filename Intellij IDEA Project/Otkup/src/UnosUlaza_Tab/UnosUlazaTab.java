@@ -111,6 +111,7 @@ public class UnosUlazaTab extends VBox {
 	private int izvestajTip = 1;
 	
 	private Button BStamajPaletniList;
+	private ComboBox<String> cbObeleživač;
 	private RadioButton RBKartonIndentifikacije;
 	private RadioButton RBMikerPapiric;
 	private RadioButton RBFertodiPapiric;
@@ -752,26 +753,33 @@ public class UnosUlazaTab extends VBox {
 		stampaHB.setAlignment(Pos.BASELINE_LEFT);
 		ImageView st = new ImageView(Firma.getInstance().getPrintIco());
 		stampaHB.getChildren().add(st);
-		Label l1 = new Label("Štampa kartona identifikacije:   ");
+		Label l1 = new Label("Štampa obeleživača i kartona identifikacije:   ");
 		l1.setFont(new Font(20));
 		stampaHB.getChildren().add(l1);
 		Label l2 = new Label("Štampaj:   ") ;
 		l2.setFont(new Font(15));
 		stampaHB.getChildren().add(l2);
-		RBKartonIndentifikacije = new RadioButton("karton identifikacije");
-		RBMikerPapiric = new RadioButton("Miker obeleživač");
-		RBFertodiPapiric = new RadioButton("Fertodi obeleživač");
-		TGObelezivaci = new ToggleGroup();
-		RBKartonIndentifikacije.setToggleGroup(TGObelezivaci);
-		RBMikerPapiric.setToggleGroup(TGObelezivaci);
-		RBFertodiPapiric.setToggleGroup(TGObelezivaci);
-		stampaHB.getChildren().addAll(RBMikerPapiric,RBFertodiPapiric,RBKartonIndentifikacije);
-		RBMikerPapiric.setSelected(true);
+
+		cbObeleživač = new ComboBox<String>();
+		cbObeleživač.setPromptText("(izaberi)");
+		cbObeleživač.getItems().addAll("Karton identifikacije", "Miker obeleživač", "Fertodi obeleživač", "Enrosadira obeleživač", "Tulamin obeleživač","Polka obeleživač", "Kupina obeleživač" );
+		cbObeleživač.setTooltip(new Tooltip());
+		new ComboBoxAutoComplete<String>(cbObeleživač);
+
+
 		BStamajPaletniList = new Button("štampaj");
 		ImageView ici = new ImageView(Firma.getInstance().getPrintIco());
 		BStamajPaletniList.setGraphic(ici);
+		BStamajPaletniList.setDisable(true);
 		BStamajPaletniList.setOnAction(new StampajKIKontroler());
-		stampaHB.getChildren().add(BStamajPaletniList);
+
+		cbObeleživač.valueProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue != null) {
+				BStamajPaletniList.setDisable(false);
+			}
+		});
+
+		stampaHB.getChildren().addAll( cbObeleživač, BStamajPaletniList);
 		getChildren().add(stampaHB);
 	}
 	
@@ -1245,4 +1253,6 @@ public class UnosUlazaTab extends VBox {
 	}
 
 	public RadioButton getRBPeriodicniPoDanimaIzvestaj() { return RBPeriodicniPoDanimaIzvestaj; }
+
+	public ComboBox<String> getCbObeleživač() { return cbObeleživač; }
 }

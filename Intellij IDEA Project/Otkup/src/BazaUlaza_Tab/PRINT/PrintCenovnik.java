@@ -131,8 +131,8 @@ public class PrintCenovnik {
 				
 				red2 = new HBox();
 				red2.setAlignment(Pos.BOTTOM_LEFT);
-				double bezPDV = 95.0 * cu.getCenaSaPrevozom() / 100.0 ;
-				Label l3 = new Label("                "+ bezPDV + " din + 5% PDV = " );
+				double bezPDV = 92.0 * cu.getCenaSaPrevozom() / 100.0 ;
+				Label l3 = new Label("                "+ bezPDV + " din + 8% PDV = " );
 				l3.setFont(Font.font("Verdana", 15));
 				l3.setPrefWidth(280);
 				Label l4 = new Label(String.valueOf(cu.getCenaSaPrevozom())+" din");
@@ -175,8 +175,8 @@ public class PrintCenovnik {
 				
 				red2 = new HBox();
 				red2.setAlignment(Pos.BOTTOM_LEFT);
-				double bezPDV = 95.0 * cu.getCenaBezPrevoza() / 100.0 ;
-				Label l3 = new Label("                "+ bezPDV + " din + 5% PDV = " );
+				double bezPDV = 92.0 * cu.getCenaBezPrevoza() / 100.0 ;
+				Label l3 = new Label("                "+ bezPDV + " din + 8% PDV = " );
 				l3.setFont(Font.font("Verdana", 15));
 				l3.setPrefWidth(280);
 				Label l4 = new Label(String.valueOf(cu.getCenaBezPrevoza())+" din");
