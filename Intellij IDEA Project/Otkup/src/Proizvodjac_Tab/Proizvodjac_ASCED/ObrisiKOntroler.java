@@ -1,6 +1,8 @@
 package Proizvodjac_Tab.Proizvodjac_ASCED;
 
 import java.util.Optional;
+
+import BrzUnosUlaza_tab.BrzUnosUlazaTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -11,7 +13,6 @@ import model.Proizvodjac;
 import Gajbe_Tab.GajbeTab;
 import Proizvodjac_Tab.ProizvodjaciTab;
 import UnosIzlaza_Tab.UnosIzlazaTab;
-import UnosUlaza_Tab.UnosUlazaTab;
 
 public class ObrisiKOntroler implements EventHandler<ActionEvent> {
 
@@ -37,10 +38,10 @@ public class ObrisiKOntroler implements EventHandler<ActionEvent> {
 		ProizvodjaciTab.getInstance().getTabela().getSelectionModel().clearSelection();
 		ProizvodjaciTab.getInstance().getBDodaj().requestFocus();
 		
-		UnosIzlazaTab.getInstance().updateCBProizvodjac();
-		UnosIzlazaTab.getInstance().updateTabele();
-		UnosUlazaTab.getInstance().updateCBProizvodjac();
-		UnosUlazaTab.getInstance().updateTabele();
+		BrzUnosUlazaTab.getInstance().updateCBProizvodjac();
+		BrzUnosUlazaTab.getInstance().updateTabele();
+		BrzUnosUlazaTab.getInstance().updateCBProizvodjac();
+		BrzUnosUlazaTab.getInstance().updateTabele();
 		GajbeTab.getInstance().updateTabeleUnosaGajbi();
 		GajbeTab.getInstance().updateCBProizvodjac();
 		GajbeTab.getInstance().updateCBProizvodjacPretraga();

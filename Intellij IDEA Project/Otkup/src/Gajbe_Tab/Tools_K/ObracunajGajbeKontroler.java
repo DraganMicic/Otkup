@@ -1,5 +1,6 @@
 package Gajbe_Tab.Tools_K;
 
+import Main.Print;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -28,7 +29,9 @@ public class ObracunajGajbeKontroler implements EventHandler<ActionEvent> {
 				ukupnoNaStanju += g.getUkupnoNaRaspolaganju();
 			}
 			int naStanju = ukupnoNaStanju-naTerenu;
-			String tekst = "UKUPNO \nna terenu: " + naTerenu + "kom\nna stanju: " + naStanju +"kom" ;
+			String tekst = "UKUPNO \nna terenu: "
+					+ Print.getInstance().getFormatter().format(naTerenu) + "kom\nna stanju: "
+					+ Print.getInstance().getFormatter().format(naStanju) +"kom" ;
 			Alert a = new Alert(AlertType.INFORMATION, tekst);
 			a.setTitle("Brz obračun");
 			a.setHeaderText("Brz obračun za sve gajbe");
@@ -48,7 +51,9 @@ public class ObracunajGajbeKontroler implements EventHandler<ActionEvent> {
 			}
 			int naTerenu = ukupnoZaduzenih-ukupnoRazduzenih;
 			int naStanju = ukupnoNaStanju-naTerenu;
-			String tekst = "UKUPNO \naa terenu: " + naTerenu + "kom\nna stanju: " + naStanju +"kom" ;
+			String tekst = "UKUPNO \naa terenu: "
+					+ Print.getInstance().getFormatter().format(naTerenu) + "kom\nna stanju: "
+					+ Print.getInstance().getFormatter().format(naStanju) +"kom" ;
 			Alert a = new Alert(AlertType.INFORMATION, tekst);
 			a.setTitle("Brz obračun");
 			a.setHeaderText("Brz obračun za filtrirane gajbe");

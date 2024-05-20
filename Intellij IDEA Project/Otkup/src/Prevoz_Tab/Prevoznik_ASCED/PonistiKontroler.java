@@ -12,7 +12,7 @@ public class PonistiKontroler implements EventHandler<ActionEvent> {
 		PrevozTab.getInstance().setUnosNovog(false);
 		PrevozTab.getInstance().setIzmenaUToku(false);
 		
-		PrevozTab.getInstance().getUnosHB().setDisable(true);    //podesavam prikaz
+		PrevozTab.getInstance().SetuUnosDisable();    //podesavam prikaz
 		PrevozTab.getInstance().getBDodaj().setDisable(false);
 		PrevozTab.getInstance().getBPonisti().setDisable(true);
 		PrevozTab.getInstance().getBSacuvaj().setDisable(true);

@@ -2,25 +2,29 @@ package Main;
 
 import BazaIzlaza_Tab.BazaIzlazaTab;
 import BazaUlaza_Tab.BazaUlazaTab;
+import BrzUnosUlaza_tab.BrzUnosUlazaTab;
 import Gajbe_Tab.GajbeTab;
 import Podesavanja_Tab.PodesavanjaTab;
 import Prevoz_Tab.PrevozTab;
 import Proizvodjac_Tab.ProizvodjaciTab;
 import StatistikaTab.StatistikaTab;
 import UnosIzlaza_Tab.UnosIzlazaTab;
-import UnosUlaza_Tab.UnosUlazaTab;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 import model.Firma;
 
@@ -28,6 +32,16 @@ public class MainStage extends Stage {
 	
 	private static MainStage instance;	
 	private TabPane tabPane;
+
+	private ScrollPane SPUnosUlaza;
+	private ScrollPane SPUnosIzlaza;
+	private ScrollPane SPBazaPoizvodjaca;
+	private ScrollPane SPBazaUlaza;
+	private ScrollPane SpBazaIzlaza;
+	private  ScrollPane SpPrevozi;
+	private  ScrollPane SpGajbe;
+	private  ScrollPane spStatistika;
+	private ScrollPane spPodesavanja;
 	
 	private MainStage() {
 			
@@ -56,7 +70,12 @@ public class MainStage extends Stage {
 		v1.setAlignment(Pos.BASELINE_CENTER);
 		Tab proizvodjaciTab = new Tab();
 		proizvodjaciTab.setGraphic(v1);
-		proizvodjaciTab.setContent(ProizvodjaciTab.getInstance());
+		////
+		SPBazaPoizvodjaca = new ScrollPane();
+		SPBazaPoizvodjaca.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		SPBazaPoizvodjaca.setFitToWidth(true);
+		SPBazaPoizvodjaca.setContent(ProizvodjaciTab.getInstance());
+		proizvodjaciTab.setContent(SPBazaPoizvodjaca);
 		
 		Label l2 = new Label("BAZA ULAZA");   //ulazi tab	
 		VBox v2 = new VBox();
@@ -69,7 +88,12 @@ public class MainStage extends Stage {
 		v2.setAlignment(Pos.BASELINE_CENTER);
 		Tab ulaziTab = new Tab();
 		ulaziTab.setGraphic(v2);
-		ulaziTab.setContent(BazaUlazaTab.getInstance());
+		////
+		SPBazaUlaza = new ScrollPane();
+		SPBazaUlaza.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		SPBazaUlaza.setFitToWidth(true);
+		SPBazaUlaza.setContent(BazaUlazaTab.getInstance());
+		ulaziTab.setContent(SPBazaUlaza);
 		
 		Label l3 = new Label("BAZA IZLAZA");   //izlazi tab	
 		VBox v3 = new VBox();
@@ -82,7 +106,12 @@ public class MainStage extends Stage {
 		v3.setAlignment(Pos.BASELINE_CENTER);
 		Tab izlaziTab = new Tab();
 		izlaziTab.setGraphic(v3);
-		izlaziTab.setContent(BazaIzlazaTab.getInstance());
+		////
+		SpBazaIzlaza = new ScrollPane();
+		SpBazaIzlaza.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		SpBazaIzlaza.setFitToWidth(true);
+		SpBazaIzlaza.setContent(BazaIzlazaTab.getInstance());
+		izlaziTab.setContent(SpBazaIzlaza);
 		
 		Label l4 = new Label("UNOS ULAZA");   //Unos ulaza tab	
 		VBox v4 = new VBox();
@@ -95,8 +124,26 @@ public class MainStage extends Stage {
 		v4.setAlignment(Pos.BASELINE_CENTER);
 		Tab unosUlazaTab = new Tab();
 		unosUlazaTab.setGraphic(v4);
-		unosUlazaTab.setContent(UnosUlazaTab.getInstance());
-		
+		unosUlazaTab.setContent(BrzUnosUlazaTab.getInstance());
+
+		Label l4_2 = new Label("UNOS ULAZA");   //Brzu unos ulaza tab
+		VBox v4_2 = new VBox();
+		v4_2.setPadding(new Insets(5,5,5,5));
+		Image brzUnosUlaza = new Image("/slike/unosulaza.png", 30, 30 , false, false);
+		ImageView iv4_2 = new ImageView();
+		iv4_2.setImage(brzUnosUlaza);
+		v4_2.getChildren().add(iv4_2);
+		v4_2.getChildren().add(l4_2);
+		v4_2.setAlignment(Pos.BASELINE_CENTER);
+		Tab brzUnosUlazaTab = new Tab();
+		brzUnosUlazaTab.setGraphic(v4_2);
+        ////
+		SPUnosUlaza = new ScrollPane();
+		SPUnosUlaza.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		SPUnosUlaza.setFitToWidth(true);
+		SPUnosUlaza.setContent(BrzUnosUlazaTab.getInstance());
+		brzUnosUlazaTab.setContent(SPUnosUlaza);
+
 		Label l5 = new Label("UNOS IZLAZA");   //Unos izlaza tab
 		VBox v5 = new VBox();
 		v5.setPadding(new Insets(5,5,5,5));
@@ -108,7 +155,12 @@ public class MainStage extends Stage {
 		v5.setAlignment(Pos.BASELINE_CENTER);	
 		Tab unosIzlazaTab = new Tab();
 		unosIzlazaTab.setGraphic(v5);
-		unosIzlazaTab.setContent(UnosIzlazaTab.getInstance());
+		////
+		SPUnosIzlaza = new ScrollPane();
+		SPUnosIzlaza.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		SPUnosIzlaza.setFitToWidth(true);
+		SPUnosIzlaza.setContent(UnosIzlazaTab.getInstance());
+		unosIzlazaTab.setContent(SPUnosIzlaza);
 		
 		Label l6 = new Label("PREVOZ");
 		VBox v6 = new VBox();
@@ -121,9 +173,14 @@ public class MainStage extends Stage {
 		v6.setAlignment(Pos.BASELINE_CENTER);	
 		Tab PrevoziTab = new Tab();
 		PrevoziTab.setGraphic(v6);
-		PrevoziTab.setContent(PrevozTab.getInstance());
+		////
+		SpPrevozi = new ScrollPane();
+		SpPrevozi.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		SpPrevozi.setFitToWidth(true);
+		SpPrevozi.setContent(PrevozTab.getInstance());
+		PrevoziTab.setContent(SpPrevozi);
 		
-		Label l7 = new Label("GAJBE");
+		Label l7 = new Label("AMBALAŽA");
 		VBox v7 = new VBox();
 		v7.setPadding(new Insets(5,5,5,5));
 		Image gajba = new Image("/slike/gajba.png", 30, 30 , false, false);
@@ -134,7 +191,12 @@ public class MainStage extends Stage {
 		v7.setAlignment(Pos.BASELINE_CENTER);	
 		Tab gajbeTab = new Tab();
 		gajbeTab.setGraphic(v7);
-		gajbeTab.setContent(GajbeTab.getInstance());
+		////
+		SpGajbe = new ScrollPane();
+		SpGajbe.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		SpGajbe.setFitToWidth(true);
+		SpGajbe.setContent(GajbeTab.getInstance());
+		gajbeTab.setContent(SpGajbe);
 		
 		Label l8 = new Label("PODEŠAVANjA");
 		VBox v8 = new VBox();
@@ -147,7 +209,12 @@ public class MainStage extends Stage {
 		v8.setAlignment(Pos.BASELINE_CENTER);	
 		Tab podesavanjaTab = new Tab();
 		podesavanjaTab.setGraphic(v8);
-		podesavanjaTab.setContent(PodesavanjaTab.getInstance());
+		////
+		spPodesavanja = new ScrollPane();
+		spPodesavanja.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		spPodesavanja.setFitToWidth(true);
+		spPodesavanja.setContent(PodesavanjaTab.getInstance());
+		podesavanjaTab.setContent(spPodesavanja);
 
 		Label l9 = new Label("STATISTIKA");
 		VBox v9 = new VBox();
@@ -160,9 +227,14 @@ public class MainStage extends Stage {
 		v9.setAlignment(Pos.BASELINE_CENTER);
 		Tab statistikaTab = new Tab();
 		statistikaTab.setGraphic(v9);
-		statistikaTab.setContent(StatistikaTab.getInstance());
+		////
+		spStatistika = new ScrollPane();
+		spStatistika.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		spStatistika.setFitToWidth(true);
+		spStatistika.setContent(StatistikaTab.getInstance());
+		statistikaTab.setContent(spStatistika);
 				
-		tabPane.getTabs().addAll(proizvodjaciTab, ulaziTab, izlaziTab, unosUlazaTab,unosIzlazaTab,PrevoziTab,gajbeTab,statistikaTab,podesavanjaTab);
+		tabPane.getTabs().addAll(proizvodjaciTab, ulaziTab, izlaziTab, brzUnosUlazaTab, unosIzlazaTab,PrevoziTab,gajbeTab,statistikaTab,podesavanjaTab);
 		
 		Scene sc = new Scene(tabPane,1500,810);
 		sc.setFill(null);
@@ -179,6 +251,16 @@ public class MainStage extends Stage {
 	}
 	
 	public void podesiBoju(String bojaDole, String bojaGore) {
-		tabPane.setStyle("-fx-background-color: linear-gradient(" + bojaGore + ", " + bojaDole +")");
+
+		BrzUnosUlazaTab.getInstance().setColor(bojaGore,bojaDole);
+		UnosIzlazaTab.getInstance().setColor(bojaGore,bojaDole);
+		ProizvodjaciTab.getInstance().setColor(bojaGore,bojaDole);
+		BazaUlazaTab.getInstance().setColor(bojaGore,bojaDole);
+		BazaIzlazaTab.getInstance().setColor(bojaGore,bojaDole);
+		PrevozTab.getInstance().setColor(bojaGore,bojaDole);
+		GajbeTab.getInstance().setColor(bojaGore,bojaDole);
+		StatistikaTab.getInstance().setColor(bojaGore,bojaDole);
+		PodesavanjaTab.getInstance().setColor(bojaGore,bojaDole);
+
 	}
 }

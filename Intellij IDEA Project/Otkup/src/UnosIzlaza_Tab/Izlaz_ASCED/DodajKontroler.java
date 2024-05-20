@@ -30,13 +30,11 @@ public class DodajKontroler implements EventHandler<ActionEvent> {
 			UnosIzlazaTab.getInstance().getDpDatum().setValue(poslednjiDatum);
 			UnosIzlazaTab.getInstance().getCbIzlaz().setValue(poslednjiIzlaz);
 		}
-		
-		
-		
+
 		
 		UnosIzlazaTab.getInstance().getTfSifra().setText(String.valueOf(poslednjaSifra+1));
 				
-		UnosIzlazaTab.getInstance().getUnosFp().setDisable(false);   //podesavam prikaz
+		UnosIzlazaTab.getInstance().SetUnosEnable();   //podesavam prikaz
 		UnosIzlazaTab.getInstance().getBDodaj().setDisable(true);		 
 		UnosIzlazaTab.getInstance().getBSacuvaj().setDisable(false);
 		UnosIzlazaTab.getInstance().getBPonisti().setDisable(false);		

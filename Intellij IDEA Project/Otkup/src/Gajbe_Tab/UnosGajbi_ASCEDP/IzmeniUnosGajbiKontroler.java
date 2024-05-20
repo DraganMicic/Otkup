@@ -27,7 +27,7 @@ public class IzmeniUnosGajbiKontroler implements EventHandler<ActionEvent> {
 		if(ug.getProizvodjac() == null)
 			GajbeTab.getInstance().getCbProizvodjac().setDisable(true);
 		
-		GajbeTab.getInstance().getUnosUnosaGajbiFP().setDisable(false);     //podesavam prikaz 
+		GajbeTab.getInstance().SetUnosZaduzenjaEnable();     //podesavam prikaz
 		GajbeTab.getInstance().getBObrisiUnosGajbe().setDisable(true);
 		GajbeTab.getInstance().getBSacuvajUnosGajbe().setDisable(false);
 		GajbeTab.getInstance().getBIzmeniUnosGajbe().setDisable(true);

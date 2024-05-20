@@ -1,5 +1,6 @@
 package UnosIzlaza_Tab.Tools_K;
 
+import Main.Print;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -19,7 +20,7 @@ public class ObracunajKontroler implements EventHandler<ActionEvent>{
 			for(UnosIzlaza ui : Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza()) {
 				ukupnaVrednost += ui.getKolicina() * ui.getIzlaz().getCenaPoKomadu();
 			}
-			String tekst = "UKUPNO \nvrednost izlaza: " + ukupnaVrednost +"din" ;
+			String tekst = "UKUPNO \nvrednost izlaza: " + Print.getInstance().getFormatter().format( ukupnaVrednost) +"din" ;
 			Alert a = new Alert(AlertType.INFORMATION, tekst);
 			a.setTitle("Brz obračun");
 			a.setHeaderText("Brz obračun za sve unose izlaza");
@@ -32,13 +33,15 @@ public class ObracunajKontroler implements EventHandler<ActionEvent>{
 				}
 			}
 			if(ukupnaKolicina != 0.0) {
-				String tekst = "UKUPNO \nvrednost izlaza: " + ukupnaVrednost +"din\nkolicina:" + ukupnaKolicina + UnosIzlazaTab.getInstance().getCBIzlazPretraga().getSelectionModel().getSelectedItem().getJedinicaMere() ;
+				String tekst = "UKUPNO \nvrednost izlaza: "
+						+ Print.getInstance().getFormatter().format(ukupnaVrednost) +"din\nkolicina:"
+						+ Print.getInstance().getFormatter().format(ukupnaKolicina) + UnosIzlazaTab.getInstance().getCBIzlazPretraga().getSelectionModel().getSelectedItem().getJedinicaMere() ;
 				Alert a = new Alert(AlertType.INFORMATION, tekst);
 				a.setTitle("Brz obračun");
 				a.setHeaderText("Brz obračun za filtrirane unose izlaza");
 				a.show();
 			}else {
-				String tekst = "UKUPNO \nvrednost izlaza: " + ukupnaVrednost +"din" ;
+				String tekst = "UKUPNO \nvrednost izlaza: " + Print.getInstance().getFormatter().format( ukupnaVrednost) +"din" ;
 				Alert a = new Alert(AlertType.INFORMATION, tekst);
 				a.setTitle("Brz obračun");
 				a.setHeaderText("Brz obračun za filtrirane unose izlaza");

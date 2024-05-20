@@ -3,6 +3,7 @@ package Gajbe_Tab.UnosGajbi_ASCEDP;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import BrzUnosUlaza_tab.BrzUnosUlazaTab;
 import Gajbe_Tab.PRINT.POSPrintUosGajbi;
 import Gajbe_Tab.Tools_K.PonisitiPretraguUnosaGajbi;
 import javafx.event.ActionEvent;
@@ -16,7 +17,6 @@ import model.Prevoznik;
 import model.Proizvodjac;
 import model.UnosGajbi;
 import Gajbe_Tab.GajbeTab;
-import UnosUlaza_Tab.UnosUlazaTab;
 
 public class SacuvajiStampajUnsoGajbiKOntroler implements EventHandler<ActionEvent> {
 
@@ -137,7 +137,7 @@ public void handle(ActionEvent event) {
 		GajbeTab.getInstance().setIzmenaUnosaGajbi(false);
 			
 		GajbeTab.getInstance().ocitiPoljaZaUnosUnosaGajbi();   //podesavam prikaz
-		GajbeTab.getInstance().getUnosUnosaGajbiFP().setDisable(true);
+		GajbeTab.getInstance().SetUnosZaduzenjaDisable();
 		GajbeTab.getInstance().getBDodajUnosGajbe().setDisable(false);
 		GajbeTab.getInstance().getBSacuvajUnosGajbe().setDisable(true);
 		GajbeTab.getInstance().getBPonistiUnosGajbe().setDisable(true);
@@ -148,7 +148,8 @@ public void handle(ActionEvent event) {
 		GajbeTab.getInstance().getTabelaUnosGajbi().getSelectionModel().clearSelection();
 		GajbeTab.getInstance().getBDodajUnosGajbe().requestFocus();		
 		new PonisitiPretraguUnosaGajbi().handle(event);
-		
-		UnosUlazaTab.getInstance().updateTabele();
+		GajbeTab.getInstance().updateTabeleGajbi();
+
+		BrzUnosUlazaTab.getInstance().updateTabele();
 	}
 }

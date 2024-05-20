@@ -1,6 +1,7 @@
 package Proizvodjac_Tab.Proizvodjac_ASCED;
 import java.util.Optional;
 
+import BrzUnosUlaza_tab.BrzUnosUlazaTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -12,7 +13,6 @@ import model.Proizvodjac;
 import Gajbe_Tab.GajbeTab;
 import Proizvodjac_Tab.ProizvodjaciTab;
 import UnosIzlaza_Tab.UnosIzlazaTab;
-import UnosUlaza_Tab.UnosUlazaTab;
 
 public class SacuvajKontroler implements EventHandler<ActionEvent> {
 
@@ -107,7 +107,7 @@ public class SacuvajKontroler implements EventHandler<ActionEvent> {
 		ProizvodjaciTab.getInstance().setIzmenaUToku(false);
 			
 		ProizvodjaciTab.getInstance().ocistiPoljaZaUnos();		   //podesavam prikaz
-		ProizvodjaciTab.getInstance().getUnosFP().setDisable(true);
+		ProizvodjaciTab.getInstance().SetUnosDisable();
 		ProizvodjaciTab.getInstance().getBDodaj().setDisable(false);
 		ProizvodjaciTab.getInstance().getBSacuvaj().setDisable(true);
 		ProizvodjaciTab.getInstance().getBPonisti().setDisable(true);
@@ -117,14 +117,16 @@ public class SacuvajKontroler implements EventHandler<ActionEvent> {
 		ProizvodjaciTab.getInstance().getBDodaj().requestFocus();		
 		
 		
-		UnosIzlazaTab.getInstance().updateCBProizvodjac();
-		UnosIzlazaTab.getInstance().updateTabele();
-		UnosUlazaTab.getInstance().updateCBProizvodjac();
-		UnosUlazaTab.getInstance().updateTabele();
+		BrzUnosUlazaTab.getInstance().updateCBProizvodjac();
+		BrzUnosUlazaTab.getInstance().updateTabele();
+		BrzUnosUlazaTab.getInstance().updateCBProizvodjac();
+		BrzUnosUlazaTab.getInstance().updateTabele();
+		BrzUnosUlazaTab.getInstance().updateCBProizvodjacPretraga();
 		GajbeTab.getInstance().updateTabeleUnosaGajbi();
 		GajbeTab.getInstance().updateCBProizvodjac();
 		GajbeTab.getInstance().updateCBProizvodjacPretraga();
 		GajbeTab.getInstance().updateCBProizvodjacIzvestaj();
+		ProizvodjaciTab.getInstance().updatecbProizvodjacStampaSvega();
 	}			
 	
 

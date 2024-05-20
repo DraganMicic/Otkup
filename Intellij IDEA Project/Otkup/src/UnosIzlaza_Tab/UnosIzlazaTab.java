@@ -1,6 +1,6 @@
 package UnosIzlaza_Tab;
 
-import java.awt.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import Main.ComboBoxAutoComplete;
@@ -9,13 +9,18 @@ import UnosIzlaza_Tab.Izlaz_ASCED.IzmeniKontroler;
 import UnosIzlaza_Tab.Tools_K.ObracunajKontroler;
 import UnosIzlaza_Tab.Izlaz_ASCED.ObrisiKontroler;
 import UnosIzlaza_Tab.Izlaz_ASCED.PonistiKontroler;
-import UnosIzlaza_Tab.Tools_K.PonistiPretraguKontroler;
+import UnosIzlaza_Tab.Tools_K.PonistiPretraguKontroler1;
 import UnosIzlaza_Tab.Izlaz_ASCED.SacuvajKontroler;
+import UnosIzlaza_Tab.Tools_K.PonistiPretraguKontroler2;
 import UnosIzlaza_Tab.Tools_K.StampajIzvestajKontroler;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -23,10 +28,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import model.Firma;
 import model.Izlaz;
 import model.Proizvodjac;
@@ -38,22 +44,34 @@ public class UnosIzlazaTab extends VBox {
 	
 	private boolean unosNovog=false;
 	private boolean izmenaUToku = false;
-	
+
+	private HBox unosITabelaHb;
+
+	private GridPane unosGp;
+	private Label lsifra;
 	private TextField tfSifra;
+	private Label ldatum;
 	private DatePicker dpDatum;
 	private TextField tfSifraProizvodjaca;
-	private ComboBox<Proizvodjac> cbProizvodjac;	
+	private Label lproizvodjac;
+	private ComboBox<Proizvodjac> cbProizvodjac;
+	private Label lizlaz;
 	private ComboBox<Izlaz> cbIzlaz;
+	private Label ljedmere;
+	private Label lbrojotpremnice;
 	private TextField tfBrOtpremnice;
+	private Label lkolicina;
 	private TextField tfKolicina;
-	
-	private FlowPane unosFp;
+	private Label ldatumobavestenje;
+
 	private Button BDodaj;
 	private Button BSacuvaj;
 	private Button BPonisti;
 	private Button BIzmeni;
 	private Button BObrisi;
-	
+
+	private HBox trakaZaPretragu1HB;
+	private HBox trakaZaPretragu2HB;
 	private RadioButton RBDanPretraga;
 	private RadioButton RBPeriodPretraga;
 	private ToggleGroup TGDanPeriodPretraga;
@@ -61,73 +79,151 @@ public class UnosIzlazaTab extends VBox {
 	private DatePicker DPKrajnjiPretraga;
 	private ComboBox<Proizvodjac> CBProizvodjacPretraga;
 	private ComboBox<Izlaz> CBIzlazPretraga;
-	private Button BPonisitPretragu;
-	private HBox trakaZaPretraguHB;
+	private Button BPonisitPretragu1;
+	private Button BPonisitPretragu2;
 	private Label Lod;
 	private Label Ldo;
 	private int pozicija = 6;
-	
+
+	private HBox obracunHB;
 	private RadioButton RBSviObracun;
 	private RadioButton RBFiltriraniObracun;
 	private ToggleGroup TGObracun;
 	private Button BObracunaj;
-	
+
+	private HBox stampaIzvestajaHB;
 	private DatePicker DPPocetniIzvestaj;
 	private DatePicker DPKrajnjiIzvestaj;
 	private Button BStampajIzvestaj;
 	
 	private TableView<UnosIzlaza> tabela;
-	
+
+
 	private UnosIzlazaTab() {
-		
+
 		setPadding(new Insets(10,20,10,20));  //podesavam ceo tab
 		setSpacing(15);
+		this.setMinHeight(Screen.getPrimary().getBounds().getHeight()-80);
+
+		//naslov 1
 		Label naslov = new Label("Unos izlaza (akontacija):");
 		naslov.setFont(new Font(35));
-		this.getChildren().add(naslov);
+		Separator separator = new Separator();
+		this.getChildren().addAll(naslov,separator);
+
+		//unos i tabela
+		unosITabelaHb = new HBox(20);
+		this.getChildren().add(unosITabelaHb);
+
+		//podesavanja grid panea
+		unosGp = new GridPane();
+		unosGp.setPadding(new Insets(10, 10, 10, 10));
+		unosGp.setVgap(10);
+		unosGp.setHgap(10);
+		unosGp.setAlignment(Pos.BASELINE_LEFT);
+		unosGp.setStyle("-fx-font: 20px \"Serif\";");
+		unosGp.setMinWidth(690);
 		
-		trakZaUnos();
-		trakaKomandi();
+		unos();
 		tabela();
+		tabela.setPrefWidth(1300);
+		tabela.setPrefHeight(530);
+
+		Separator separator2 = new Separator();
+		separator2.setOrientation(Orientation.VERTICAL);
+		unosITabelaHb.getChildren().addAll(unosGp,separator2,tabela);
+
+		//naslov2
+		Label naslov2 = new Label("Alati:");
+		naslov2.setFont(new Font(35));
+		Separator separator1 = new Separator();
+		this.getChildren().addAll(naslov2,separator1);
+
+		//alati
 		trakaZaPretragu();
 		trakaZaObracun();
 		trakaZaStampuIzvestaja();
+		this.getChildren().addAll(trakaZaPretragu1HB,trakaZaPretragu2HB,obracunHB,stampaIzvestajaHB);
+		
+		//pocetni update
+		
+		updateCBProizvodjac();
+		upodateCBIzlaz();
+		updateCBProizvodjacPretraga();
+		updateCBIzlazPretraga();
+		
+		getBDodaj().requestFocus();
+		
 	}
 	
-	private void trakZaUnos() {
-		
-		tfSifra = new TextField();
-		tfSifra.setPrefWidth(40);
-		dpDatum = new DatePicker();
-		tfSifraProizvodjaca = new TextField();
-		tfSifraProizvodjaca.setPrefWidth(40);
-		cbProizvodjac = new ComboBox<Proizvodjac>();				
-		cbIzlaz = new ComboBox<Izlaz>();		
-		tfBrOtpremnice = new TextField();
-		tfBrOtpremnice.setPrefWidth(150);		
-		tfKolicina = new TextField();
-		tfKolicina.setPrefWidth(100);	
-		
-		unosFp = new FlowPane();
-		unosFp.setVgap(10);
-		unosFp.setHgap(10);
-		unosFp.setAlignment(Pos.BASELINE_LEFT);
-		unosFp.getChildren().add(new Label("šifra:"));
-		unosFp.getChildren().add(tfSifra);
-		unosFp.getChildren().add(new Label("datum:"));
-		unosFp.getChildren().add(dpDatum);
-		unosFp.getChildren().add(new Label("proizvođač:"));
-		unosFp.getChildren().add(cbProizvodjac);
-		unosFp.getChildren().add(new Label("šifra proizvođača:"));
-		unosFp.getChildren().add(tfSifraProizvodjaca);
-		unosFp.getChildren().add(new Label("vrsta izlaza:"));
-		unosFp.getChildren().add(cbIzlaz);
-		unosFp.getChildren().add(new Label("broj otpremnice/računa"));
-		unosFp.getChildren().add(tfBrOtpremnice);
-		HBox kolicinaHB = new HBox(10);
-		kolicinaHB.getChildren().addAll(new Label("količina:"),tfKolicina);
-		unosFp.getChildren().add(kolicinaHB);
+	private void  unos(){
 
+		//DUGMICI///////////////////////////////////////////////////////////////////////////////
+		BDodaj = new Button("Dodaj");
+		ImageView add = new ImageView(Firma.getInstance().getAddIco());
+		BDodaj.setGraphic(add);
+		BDodaj.setPrefWidth(200);
+		BDodaj.setOnAction(new DodajKontroler());
+
+		BSacuvaj = new Button("Sačuvaj");
+		ImageView save = new ImageView(Firma.getInstance().getSaveIco());
+		BSacuvaj.setGraphic(save);
+		BSacuvaj.setPrefWidth(200);
+		BSacuvaj.setOnAction(new SacuvajKontroler());
+		BSacuvaj.setDisable(true);
+
+		BPonisti = new Button("Stop");
+		ImageView cancel = new ImageView(Firma.getInstance().getCloseIco());
+		BPonisti.setGraphic(cancel);
+		BPonisti.setPrefWidth(200);
+		BPonisti.setOnAction(new PonistiKontroler());
+		BPonisti.setDisable(true);
+
+		BIzmeni = new Button("Izmeni");
+		ImageView edit = new ImageView(Firma.getInstance().getEditIco());
+		BIzmeni.setGraphic(edit);
+		BIzmeni.setPrefWidth(200);
+		BIzmeni.setOnAction(new IzmeniKontroler());
+		BIzmeni.setDisable(true);
+
+		BObrisi = new Button("Obriši");
+		ImageView delete = new ImageView(Firma.getInstance().getDeleteIco());
+		BObrisi.setGraphic(delete);
+		BObrisi.setPrefWidth(200);
+		BObrisi.setOnAction(new ObrisiKontroler());
+		BObrisi.setDisable(true);
+
+		//dodavanje gornjih dugmica
+		unosGp.add(BDodaj,0,0,1,1);
+		unosGp.add(BSacuvaj,1,0,1,1);
+		unosGp.add(BPonisti,2,0,1,1);
+		unosGp.add(BIzmeni,3,0,1,1);
+		unosGp.add(BObrisi,4,0,1,1);
+
+
+		tfSifra = new TextField();
+		tfSifra.setPrefWidth(200);
+
+		ldatumobavestenje = new Label("");
+		dpDatum = new DatePicker();
+		dpDatum.setPrefWidth(410);
+		dpDatum.valueProperty().addListener(new ChangeListener<LocalDate>() {
+			public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,LocalDate newValue) {
+				LocalDate currentDate = LocalDate.now();
+				if(observable.getValue()==null)
+					ldatumobavestenje.setText("");
+				else
+				if(!observable.getValue().isEqual(currentDate))
+					ldatumobavestenje.setText("(nije današnji!)");
+				else
+					ldatumobavestenje.setText("(današnji)");
+
+			}
+		});
+
+		tfSifraProizvodjaca = new TextField();
+		tfSifraProizvodjaca.setPrefWidth(200);
+		tfSifraProizvodjaca.setPromptText("(šifra)");
 		tfSifraProizvodjaca.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -138,65 +234,74 @@ public class UnosIzlazaTab extends VBox {
 					} catch (Exception e) {
 						Alert ada = new Alert(Alert.AlertType.ERROR, "Neispravan format unosa (slovo/broj)!");
 						ada.show();
-						tfSifraProizvodjaca.clear();
+						Platform.runLater(() -> {
+							tfSifraProizvodjaca.clear();
+						});
 						return;
 					}
 					Proizvodjac p = Firma.getInstance().getTrenutnaGodina().proizvodjacSaSifrom(sifraProizvodjaca);
-					if(p != null)
+					if(p != null) {
 						cbProizvodjac.getSelectionModel().select(p);
-					else
-						updateCBProizvodjac();
+					}else{
+						Alert adda = new Alert(Alert.AlertType.ERROR, "Ne postoji proizvođač sa izabranom šifrom!");
+						adda.show();
+						Platform.runLater(() -> {
+							tfSifraProizvodjaca.clear();
+						});
+						return;
+					}
 				}else{
-					updateCBProizvodjac();
+					cbProizvodjac.getSelectionModel().clearSelection();
 				}
 			}
 		});
-				
-		getChildren().add(unosFp);
-		
-		unosFp.setDisable(true);
-		
-		updateCBProizvodjac();
-		upodateCBIzlaz();
+
+		ljedmere = new Label("");
+		cbProizvodjac = new ComboBox<Proizvodjac>();
+		cbProizvodjac.setPrefWidth(620);
+
+		cbIzlaz = new ComboBox<Izlaz>();
+		cbIzlaz.setPrefWidth(620);
+
+		tfBrOtpremnice = new TextField();
+		tfBrOtpremnice.setPrefWidth(410);
+
+		tfKolicina = new TextField();
+		tfKolicina.setPrefWidth(200);
+
+		lsifra = new Label("Šifra unosa:");
+		unosGp.add(lsifra,0,2,1,1);
+		unosGp.add(tfSifra,1,2,1,1);
+
+		ldatum = new Label("Datum:");
+		unosGp.add(ldatum,0,3,1,1);
+		unosGp.add(dpDatum,1,3,2,1);
+		unosGp.add(ldatumobavestenje,3,3,2,1);
+		unosGp.setHalignment(ldatumobavestenje, HPos.LEFT);
+
+		lproizvodjac = new Label("Proizvođač:");
+		unosGp.add(lproizvodjac,0,4,1,1);
+		unosGp.add(cbProizvodjac,1,4,3,1);
+		unosGp.add(tfSifraProizvodjaca,4,4,1,1);
+
+		lizlaz = (new Label("Vrsta izlaza:"));
+		unosGp.add(lizlaz,0,5,1,1);
+		unosGp.add(cbIzlaz,1,5,3,1);
+
+		lbrojotpremnice = new Label("Broj otpremnice/računa:");
+		unosGp.add(lbrojotpremnice,0,6,2,1);
+		unosGp.add(tfBrOtpremnice,2,6,2,1);
+
+		lkolicina = new Label("Količina:");
+		unosGp.add(lkolicina,0,7,1,1);
+		unosGp.add(tfKolicina,1,7,1,1);
+		unosGp.add(ljedmere,2,7,1,1);
+		unosGp.setHalignment(ljedmere, HPos.LEFT);
+
+		SetUnosDisable();
+
 	}
-	
-	private void trakaKomandi(){
-		
-		BDodaj = new Button("dodaj");
-		ImageView add = new ImageView(Firma.getInstance().getAddIco());
-		BDodaj.setGraphic(add); 
-		BDodaj.setOnAction(new DodajKontroler());
-		
-		BSacuvaj = new Button("sačuvaj");
-		ImageView save = new ImageView(Firma.getInstance().getSaveIco());
-		BSacuvaj.setGraphic(save);
-		BSacuvaj.setOnAction(new SacuvajKontroler());
-		BSacuvaj.setDisable(true);
-		
-		BPonisti = new Button("odustani");
-		ImageView cancel = new ImageView(Firma.getInstance().getCloseIco());
-		BPonisti.setGraphic(cancel);
-		BPonisti.setOnAction(new PonistiKontroler());
-		BPonisti.setDisable(true);
-			
-		BIzmeni = new Button("izmeni");
-		BIzmeni.setDisable(true);
-		ImageView edit = new ImageView(Firma.getInstance().getEditIco());
-		BIzmeni.setGraphic(edit);
-		BIzmeni.setOnAction(new IzmeniKontroler());
-		
-		BObrisi = new Button("obriši");
-		ImageView delete = new ImageView(Firma.getInstance().getDeleteIco());
-		BObrisi.setGraphic(delete);
-		BObrisi.setDisable(true);
-		BObrisi.setOnAction(new ObrisiKontroler());
-		
-		HBox komandeHB = new HBox(10);
-		komandeHB.getChildren().addAll(BDodaj,BSacuvaj,BPonisti,BIzmeni,BObrisi);
-		getChildren().add(komandeHB);
-		
-	}
-	
+
 	@SuppressWarnings({ "unchecked" })	
 	private void tabela() {
 		tabela = new TableView<>();
@@ -218,12 +323,18 @@ public class UnosIzlazaTab extends VBox {
 		
 		TableColumn <UnosIzlaza, Double> tcKolicina = new TableColumn<UnosIzlaza,Double>("količina:");		
 		tcKolicina.setCellValueFactory(new PropertyValueFactory<UnosIzlaza, Double>("kolicina"));
+
+		TableColumn <UnosIzlaza, String> jedmere = new TableColumn<UnosIzlaza,String>("jed. mere:");
+		jedmere.setCellValueFactory(cellData -> {
+			UnosIzlaza u = cellData.getValue();
+			String j = u.getIzlaz().getJedinicaMere();
+			return new SimpleStringProperty(j);
+		});
+
 		
-		tabela.getColumns().addAll(tcSifra,tcDatum,tcProizvodjac,tcIzlaz,tcBrOtpremnice,tcKolicina);
-		
+		tabela.getColumns().addAll(tcSifra,tcDatum,tcProizvodjac,tcIzlaz,tcBrOtpremnice,tcKolicina,jedmere);
+
 		updateTabele();
-		
-		getChildren().add(tabela);		
 		
 		tabela.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {  //kad se selektuje nesto u tabeli da se updatuju dugmici
 		    if (newSelection != null && unosNovog == false && izmenaUToku == false) {
@@ -245,71 +356,90 @@ public class UnosIzlazaTab extends VBox {
 	}
 	
 	public void updateCBProizvodjac(){
-		unosFp.getChildren().remove(cbProizvodjac);
-		cbProizvodjac = new ComboBox<Proizvodjac>();
-		unosFp.getChildren().add(5, cbProizvodjac);
+
+		cbProizvodjac.getItems().clear();
 		cbProizvodjac.getItems().addAll(Firma.getInstance().getTrenutnaGodina().getProizvodjaci());
-		new ComboBoxAutoComplete<Proizvodjac>(cbProizvodjac);
 		cbProizvodjac.setTooltip(new Tooltip());
-
-
-
-		//new ComboBoxAutoComplete<Proizvodjac>(cbProizvodjac);
+		new ComboBoxAutoComplete<Proizvodjac>(cbProizvodjac);
 		cbProizvodjac.valueProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue != null)
 				tfSifraProizvodjaca.setText(String.valueOf(newValue.getSifra()));
 			else
-				tfSifraProizvodjaca.setText("");
-			cbProizvodjac.requestFocus();
-
+				tfSifraProizvodjaca.clear();
 		});
 	}
 
 	public void upodateCBIzlaz() {
-		unosFp.getChildren().remove(cbIzlaz);
-		cbIzlaz = new ComboBox<Izlaz>();
-		unosFp.getChildren().add(9,cbIzlaz);
+
+		cbIzlaz.getItems().clear();
 		cbIzlaz.getItems().addAll(Firma.getInstance().getTrenutnaGodina().getIzlazi());
 		cbIzlaz.setTooltip(new Tooltip());
 		new ComboBoxAutoComplete<Izlaz>(cbIzlaz);
+		cbIzlaz.valueProperty().addListener((observable, oldValue, newValue) -> {
+			if(newValue==null)
+				ljedmere.setText("");
+			else
+				ljedmere.setText(observable.getValue().getJedinicaMere());
+		});
 	}
 	
 	private void trakaZaPretragu() {
-		trakaZaPretraguHB = new HBox(10);
-		trakaZaPretraguHB.setAlignment(Pos.CENTER_LEFT);
+
+		trakaZaPretragu1HB = new HBox(10);
+		trakaZaPretragu1HB.setStyle("-fx-font: 17px \"Serif\";");
+		trakaZaPretragu1HB.setAlignment(Pos.CENTER_LEFT);
 		ImageView search = new ImageView(Firma.getInstance().getSearchIco());
-		trakaZaPretraguHB.getChildren().add(search);
+		trakaZaPretragu1HB.getChildren().add(search);
 		Label pl = new Label("Pretraga/filtriranje:  ");
-		pl.setFont(new Font(20));
-		trakaZaPretraguHB.getChildren().add(pl);
+		pl.setStyle("-fx-font: 25px \"System\";");
+		trakaZaPretragu1HB.getChildren().add(pl);
 		RBDanPretraga = new RadioButton("dan");
 		RBPeriodPretraga = new RadioButton("period");
 		TGDanPeriodPretraga = new ToggleGroup();
 		RBDanPretraga.setToggleGroup(TGDanPeriodPretraga);
 		RBPeriodPretraga.setToggleGroup(TGDanPeriodPretraga);
-		trakaZaPretraguHB.getChildren().addAll(RBDanPretraga,RBPeriodPretraga);
+		trakaZaPretragu1HB.getChildren().addAll(RBDanPretraga,RBPeriodPretraga);
 		RBDanPretraga.setSelected(true);
 		DPPocetniPretraga = new DatePicker();
 		DPKrajnjiPretraga = new DatePicker();
-		DPPocetniPretraga.setPrefWidth(120);
-		DPKrajnjiPretraga.setPrefWidth(120);
+		DPPocetniPretraga.setPrefWidth(160);
+		DPKrajnjiPretraga.setPrefWidth(160);
 		Lod = new Label("datum:");
 		Ldo = new Label("do:");
-		trakaZaPretraguHB.getChildren().addAll(Lod,DPPocetniPretraga);
+		trakaZaPretragu1HB.getChildren().addAll(Lod,DPPocetniPretraga);
+		BPonisitPretragu1 = new Button("Poništi");
+		ImageView close = new ImageView(Firma.getInstance().getCloseIco());
+		BPonisitPretragu1.setGraphic(close);
+		BPonisitPretragu1.setDisable(true);
+		BPonisitPretragu1.setPrefWidth(110);
+		trakaZaPretragu1HB.getChildren().add(BPonisitPretragu1);
+		BPonisitPretragu1.setOnAction(new PonistiPretraguKontroler1());
+
+		trakaZaPretragu2HB = new HBox(10);
+		trakaZaPretragu2HB.setStyle("-fx-font: 17px \"Serif\";");
+		trakaZaPretragu2HB.setAlignment(Pos.CENTER_LEFT);
+		ImageView search2 = new ImageView(Firma.getInstance().getSearchIco());
+		trakaZaPretragu2HB.getChildren().add(search2);
+		Label pl2 = new Label("Pretraga/filtriranje:  ");
+		pl2.setStyle("-fx-font: 25px \"System\";");
+		trakaZaPretragu2HB.getChildren().add(pl2);
 		CBProizvodjacPretraga = new ComboBox<Proizvodjac>();
+		CBProizvodjacPretraga.setPrefWidth(300);
 		Label l1 = new Label("proizvođač:");
 		CBIzlazPretraga = new ComboBox<Izlaz>();
+		CBIzlazPretraga.setPrefWidth(300);
 		Label l2 = new Label("izlaz:");
-		trakaZaPretraguHB.getChildren().addAll(l1,CBProizvodjacPretraga,l2,CBIzlazPretraga);
-		BPonisitPretragu = new Button("poništi");
-		ImageView close = new ImageView(Firma.getInstance().getCloseIco());
-		BPonisitPretragu.setGraphic(close);
-		BPonisitPretragu.setDisable(true);
-		trakaZaPretraguHB.getChildren().add(BPonisitPretragu);		
-		BPonisitPretragu.setOnAction(new PonistiPretraguKontroler());
+		trakaZaPretragu2HB.getChildren().addAll(l1,CBProizvodjacPretraga,l2,CBIzlazPretraga);
+		BPonisitPretragu2 = new Button("Poništi");
+		ImageView close2 = new ImageView(Firma.getInstance().getCloseIco());
+		BPonisitPretragu2.setGraphic(close2);
+		BPonisitPretragu2.setPrefWidth(110);
+		BPonisitPretragu2.setDisable(true);
+		trakaZaPretragu2HB.getChildren().add(BPonisitPretragu2);
+		BPonisitPretragu2.setOnAction(new PonistiPretraguKontroler2());
 		
 		RBDanPretraga.setOnAction(event -> {
-			trakaZaPretraguHB.getChildren().removeAll(Ldo, DPKrajnjiPretraga);
+			trakaZaPretragu2HB.getChildren().removeAll(Ldo, DPKrajnjiPretraga);
 			DPPocetniPretraga.setValue(null);
 			DPKrajnjiPretraga.setValue(null);
 			pozicija = 6;
@@ -317,8 +447,8 @@ public class UnosIzlazaTab extends VBox {
 		});
 		
 		RBPeriodPretraga.setOnAction(event -> {
-			trakaZaPretraguHB.getChildren().add(pozicija, Ldo);
-			trakaZaPretraguHB.getChildren().add(pozicija+1, DPKrajnjiPretraga);
+			trakaZaPretragu1HB.getChildren().add(pozicija, Ldo);
+			trakaZaPretragu1HB.getChildren().add(pozicija+1, DPKrajnjiPretraga);
 			DPPocetniPretraga.setValue(null);
 			DPKrajnjiPretraga.setValue(null);
 			pozicija=8;
@@ -334,7 +464,7 @@ public class UnosIzlazaTab extends VBox {
 			tabela.getItems().addAll(uilist);
 
 			if(DPPocetniPretraga.getValue()!=null) {
-				BPonisitPretragu.setDisable(false);
+				BPonisitPretragu1.setDisable(false);
 			}
 
 		});
@@ -347,21 +477,19 @@ public class UnosIzlazaTab extends VBox {
 			tabela.getItems().addAll(uilist);
 
 			if(DPKrajnjiPretraga.getValue()!=null) {
-				BPonisitPretragu.setDisable(false);
+				BPonisitPretragu1.setDisable(false);
 			}
 
 		});
 		
 		updateCBIzlazPretraga();
 		updateCBProizvodjacPretraga();
-		
-		getChildren().add(trakaZaPretraguHB);
+
 	}
 	
 	public void updateCBProizvodjacPretraga() {
-		trakaZaPretraguHB.getChildren().remove(CBProizvodjacPretraga);
-		CBProizvodjacPretraga = new ComboBox<Proizvodjac>();
-		trakaZaPretraguHB.getChildren().add(pozicija+1, CBProizvodjacPretraga);
+
+		CBProizvodjacPretraga.getItems().clear();
 		CBProizvodjacPretraga.getItems().addAll(Firma.getInstance().getTrenutnaGodina().getProizvodjaci());
 		CBProizvodjacPretraga.setTooltip(new Tooltip());
 		new ComboBoxAutoComplete<Proizvodjac>(CBProizvodjacPretraga);
@@ -374,14 +502,13 @@ public class UnosIzlazaTab extends VBox {
 			tabela.getItems().addAll(uilist);
 
 			if(newValue != null)
-				BPonisitPretragu.setDisable(false);
+				BPonisitPretragu2.setDisable(false);
 		});
 	}
 	
 	public void updateCBIzlazPretraga() {
-		trakaZaPretraguHB.getChildren().remove(CBIzlazPretraga);
-		CBIzlazPretraga = new ComboBox<Izlaz>();
-		trakaZaPretraguHB.getChildren().add(pozicija+3, CBIzlazPretraga);
+
+		CBIzlazPretraga.getItems().clear();
 		CBIzlazPretraga.getItems().addAll(Firma.getInstance().getTrenutnaGodina().getIzlazi());
 		CBIzlazPretraga.setTooltip(new Tooltip());
 		new ComboBoxAutoComplete<Izlaz>(CBIzlazPretraga);
@@ -395,22 +522,24 @@ public class UnosIzlazaTab extends VBox {
 				tabela.getItems().addAll(uilist);
 				
 				if(newValue != null)
-					BPonisitPretragu.setDisable(false);
+					BPonisitPretragu2.setDisable(false);
 				
 			}
 		});
 	}
 
 	private void trakaZaObracun() {
-		HBox obracunHB = new HBox(10);
+
+		obracunHB = new HBox(10);
+		obracunHB.setStyle("-fx-font: 17px \"Serif\";");
 		obracunHB.setAlignment(Pos.BASELINE_LEFT);
 		ImageView obracun = new ImageView(Firma.getInstance().getObracunIco());
 		obracunHB.getChildren().add(obracun);
 		Label ol = new Label("Brz obračun:  ");
+		ol.setStyle("-fx-font: 25px \"System\";");
 		ol.setFont(new Font(20));
 		obracunHB.getChildren().add(ol);
 		Label lll = new Label("Obračunaj za:  ");
-		lll.setFont(new Font(15));
 		obracunHB.getChildren().add(lll);
 		RBSviObracun = new RadioButton("sve");
 		RBFiltriraniObracun = new RadioButton("filtrirane");
@@ -419,41 +548,43 @@ public class UnosIzlazaTab extends VBox {
 		RBFiltriraniObracun.setToggleGroup(TGObracun);
 		RBSviObracun.setSelected(true);
 		obracunHB.getChildren().addAll(RBSviObracun,RBFiltriraniObracun);
-		BObracunaj = new Button("obračunaj");
+		BObracunaj = new Button("Obračunaj");
 		ImageView obracunaj = new ImageView(Firma.getInstance().getObracunIco());
 		BObracunaj.setGraphic(obracunaj);
+		BObracunaj.setPrefWidth(130);
 		BObracunaj.setOnAction(new ObracunajKontroler());
 		obracunHB.getChildren().add(BObracunaj);
-		
-		getChildren().add(obracunHB);		
+
 	}
 	
 	private void trakaZaStampuIzvestaja() {
-		HBox stampaIzvestajaHB = new HBox(10);
+
+		stampaIzvestajaHB = new HBox(10);
+		stampaIzvestajaHB.setStyle("-fx-font: 17px \"Serif\";");
 		stampaIzvestajaHB.setAlignment(Pos.BASELINE_LEFT);
 		ImageView st = new ImageView(Firma.getInstance().getPrintIco());
 		stampaIzvestajaHB.getChildren().add(st);
 		Label l1 = new Label("Štampa izveštaja:   ");
-		l1.setFont(new Font(20));
+		l1.setStyle("-fx-font: 25px \"System\";");
 		stampaIzvestajaHB.getChildren().add(l1);
 		DPPocetniIzvestaj = new DatePicker();
-		DPPocetniIzvestaj.setPrefWidth(120);
+		DPPocetniIzvestaj.setPrefWidth(160);
 		DPKrajnjiIzvestaj = new DatePicker();
-		DPKrajnjiIzvestaj.setPrefWidth(120);
+		DPKrajnjiIzvestaj.setPrefWidth(160);
 		Label l2 = new Label("za period od:");
 		Label l3 = new Label("do:");
 		stampaIzvestajaHB.getChildren().addAll(l2,DPPocetniIzvestaj,l3,DPKrajnjiIzvestaj);
-		BStampajIzvestaj = new Button("štampaj");
+		BStampajIzvestaj = new Button("Štampaj");
 		ImageView ici = new ImageView(Firma.getInstance().getPrintIco());
 		BStampajIzvestaj.setGraphic(ici);
+		BStampajIzvestaj.setPrefWidth(110);
 		BStampajIzvestaj.setOnAction(new StampajIzvestajKontroler());
 		stampaIzvestajaHB.getChildren().add(BStampajIzvestaj);
-		this.getChildren().add(stampaIzvestajaHB);
-		
 		
 	}
 	
-	public void ocistiPoljaZaUnos() {   //cisti sva polja za unos	
+	public void ocistiPoljaZaUnos() {   //cisti sva polja za unos
+
 		tfSifra.clear();
 		dpDatum.setValue(null);
 		cbIzlaz.getSelectionModel().clearSelection();
@@ -463,6 +594,59 @@ public class UnosIzlazaTab extends VBox {
 		upodateCBIzlaz();
 		tfBrOtpremnice.clear();
 		tfKolicina.clear();
+	}
+
+	public void SetUnosDisable(){
+
+		lsifra.setDisable(true);
+		tfSifra.setDisable(true);
+		ldatum.setDisable(true);
+		ldatumobavestenje.setDisable(true);
+		dpDatum.setDisable(true);
+		lproizvodjac.setDisable(true);
+		cbProizvodjac.setDisable(true);
+		tfSifraProizvodjaca.setDisable(true);
+		lizlaz.setDisable(true);
+		cbIzlaz.setDisable(true);
+		lbrojotpremnice.setDisable(true);
+		tfBrOtpremnice.setDisable(true);
+		lkolicina.setDisable(true);
+		tfKolicina.setDisable(true);
+	}
+
+	public void SetUnosEnable(){
+
+		lsifra.setDisable(false);
+		tfSifra.setDisable(false);
+		ldatum.setDisable(false);
+		ldatumobavestenje.setDisable(false);
+		dpDatum.setDisable(false);
+		lproizvodjac.setDisable(false);
+		cbProizvodjac.setDisable(false);
+		tfSifraProizvodjaca.setDisable(false);
+		lizlaz.setDisable(false);
+		cbIzlaz.setDisable(false);
+		lbrojotpremnice.setDisable(false);
+		tfBrOtpremnice.setDisable(false);
+		lkolicina.setDisable(false);
+		tfKolicina.setDisable(false);
+	}
+
+	public void  setColor(String gore, String dole){
+
+		LinearGradient gradient = new LinearGradient(
+				0, 0, 0, 1, true, javafx.scene.paint.CycleMethod.NO_CYCLE,
+				new javafx.scene.paint.Stop(0, Color.web(gore)),
+				new javafx.scene.paint.Stop(1, Color.web(dole))
+		);
+
+		// Creating a BackgroundFill with the linear gradient
+		BackgroundFill backgroundFill = new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY);
+
+		// Creating a Background with the BackgroundFill
+		Background background = new Background(backgroundFill);
+
+		this.setBackground(background);
 	}
 	
 	public static UnosIzlazaTab getInstance() {
@@ -540,8 +724,6 @@ public class UnosIzlazaTab extends VBox {
 		UnosIzlazaTab.instance = instance;
 	}
 	
-	public FlowPane getUnosFp() { return unosFp; }
-	
 	public TextField getTfBrOtpremnice() {
 		return tfBrOtpremnice;
 	}
@@ -558,8 +740,12 @@ public class UnosIzlazaTab extends VBox {
 		return CBIzlazPretraga;
 	}
 
-	public Button getBPonisitPretragu() {
-		return BPonisitPretragu;
+	public Button getBPonisitPretragu1() {
+		return BPonisitPretragu1;
+	}
+
+	public Button getBPonisitPretragu2() {
+		return BPonisitPretragu2;
 	}
 
 	public RadioButton getRBSviObracun() {

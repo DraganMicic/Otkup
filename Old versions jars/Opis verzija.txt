@@ -3,8 +3,9 @@ V2.0 dodato unosenje po sifri za ulaze i izlaze
 v2.1 ispravljenje greske 
 v2.2 promenjen format IDja na otkupnom listu
 v3 promena izgleda (prilagodjeno za 150% scaling), nameste lep focus flow na unosu ulaza
-v3.1 decimale na ukupnoj kolicini na cedulji
+v3.1 decimale na ukupnoj kolicini na otkupnom listu
 v3.2 problem sa cenama
-v5.0 popravljeni problemi sa izmenama unos ulaza, unapredjen izvestaj proizvodjaca, dodat periodicni izvestaj po danima, dodat statistika tab, sredjeni foramti ispisa datuma i brojeva
+v5.0 popravljeni problemi sa izmenama unosa ulaza, unapredjen izvestaj proizvodjaca, dodat periodicni izvestaj po danima, dodat statistika tab, sredjeni foramti ispisa datuma i brojeva
 v5.1 izmene u ucitavanju podesavanja i u stampi ugovora i odobrenja
 v5.2 popravljen bag sa ucitavanjem statistike kada ne postoji - "greska pri ucitavanju podesavanja" 
+v6.0 Potpuno redizajniran interfejs

@@ -61,9 +61,9 @@ public class POSPrintUosGajbi {
 	    VBox datumibrListaVB = new VBox(-3);
 	    datumibrListaVB.setAlignment(Pos.TOP_LEFT);	    
 	    if(ug.getProizvodjac()!=null) {
-	    	otkupniList.setText("LIST GAJBI br. " + ug.getProizvodjac().getSifra() +"/" + ug.getSifra());
+	    	otkupniList.setText("LIST AMBALAŽE br. " + ug.getProizvodjac().getSifra() +"/" + ug.getSifra());
 	    }else if (ug.getPrevoznik()!=null) {
-	    	otkupniList.setText("LIST GAJBI br. " + ug.getPrevoznik().getSifra() +"/" + ug.getSifra());
+	    	otkupniList.setText("LIST AMBALAŽE br. " + ug.getPrevoznik().getSifra() +"/" + ug.getSifra());
 	    }	
 	    otkupniList.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 	    Label datum = new Label("Datum: " + Print.getInstance().getDateFormater2().format(ug.getDatum()));
@@ -94,7 +94,7 @@ public class POSPrintUosGajbi {
 	    
 	    VBox podaciGajbiVB = new VBox(-3);
 	    podaciProizvodjacaVB.setAlignment(Pos.TOP_LEFT);
-	    Label gajba = new Label("GAJBA: " + ug.getGajba().getNaziv() + "(" + String.valueOf(ug.getGajba().getTezina()) + "kg) ");
+	    Label gajba = new Label("AMBALAŽA: " + ug.getGajba().getNaziv() + "(" + String.valueOf(ug.getGajba().getTezina()) + "kg) ");
 	    gajba.setFont(Font.font("Verdana", FontWeight.BOLD, 12));	    
 	    Label ulaz = new Label("Ulaz: " + String.valueOf(ug.getGajbeUlaz()) + "kom");
 	    ulaz.setFont(new Font(12));	
@@ -114,9 +114,9 @@ public class POSPrintUosGajbi {
 	    	status.setText(" ");
 	    }	    
 	    if(ug.getPrevoznik()!=null) {
-	    	ukupnoZaduzenih.setText("Ukupno zaduženih gajbi: " + String.valueOf(Firma.getInstance().getTrenutnaGodina().gajbiKodPrevoznika(ug.getPrevoznik()))) ;
+	    	ukupnoZaduzenih.setText("Ukupno zaduženo: " + String.valueOf(Firma.getInstance().getTrenutnaGodina().gajbiKodPrevoznika(ug.getPrevoznik()))) ;
 	    }else if (ug.getProizvodjac()!=null) {
-	    	ukupnoZaduzenih.setText("Ukupno zaduženih gajbi: " +  String.valueOf(Firma.getInstance().getTrenutnaGodina().gajbiKodProizvodjaca(ug.getProizvodjac()))) ;
+	    	ukupnoZaduzenih.setText("Ukupno zaduženio: " +  String.valueOf(Firma.getInstance().getTrenutnaGodina().gajbiKodProizvodjaca(ug.getProizvodjac()))) ;
 	    }	
 	    Label lajna4 = new Label("-------------------------------------------");
 	    podaciGajbiVB.getChildren().addAll(gajba,ulaz,izlazz,status,ukupnoZaduzenih,lajna4);

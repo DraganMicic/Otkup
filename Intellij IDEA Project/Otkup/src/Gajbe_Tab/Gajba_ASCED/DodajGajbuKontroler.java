@@ -21,7 +21,7 @@ public class DodajGajbuKontroler implements EventHandler<ActionEvent> {
 		
 		GajbeTab.getInstance().getTfSifraGajbe().setText(String.valueOf(poslednjaSifra+1));
 				
-		GajbeTab.getInstance().getUnosGajbiFP().setDisable(false);   //podesavam prikaz
+		GajbeTab.getInstance().SetUnosGajbeEnable();   //podesavam prikaz
 		GajbeTab.getInstance().getBDodajGajbu().setDisable(true);		 
 		GajbeTab.getInstance().getBSacuvajGajbu().setDisable(false);
 		GajbeTab.getInstance().getBPonistiGajbu().setDisable(false);	

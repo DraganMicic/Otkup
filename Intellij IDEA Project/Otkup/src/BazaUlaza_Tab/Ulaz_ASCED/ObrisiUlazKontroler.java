@@ -2,6 +2,7 @@ package BazaUlaza_Tab.Ulaz_ASCED;
 
 import java.util.Optional;
 
+import BrzUnosUlaza_tab.BrzUnosUlazaTab;
 import StatistikaTab.StatistikaTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,7 +12,6 @@ import javafx.scene.control.Alert.AlertType;
 import model.Firma;
 import model.Ulaz;
 import BazaUlaza_Tab.BazaUlazaTab;
-import UnosUlaza_Tab.UnosUlazaTab;
 
 public class ObrisiUlazKontroler implements EventHandler<ActionEvent> {
 
@@ -36,9 +36,9 @@ public class ObrisiUlazKontroler implements EventHandler<ActionEvent> {
 		BazaUlazaTab.getInstance().getBObrisiUlaz().setDisable(true);
 		BazaUlazaTab.getInstance().getTabelaUlaza().getSelectionModel().clearSelection();
 		BazaUlazaTab.getInstance().getBDodajUlaz().requestFocus();
-		
-		UnosUlazaTab.getInstance().updateTabele();
-		UnosUlazaTab.getInstance().updateCBUlaz();
+
+		BrzUnosUlazaTab.getInstance().updateTabele();
+		BrzUnosUlazaTab.getInstance().updateCBUlaz();
 		BazaUlazaTab.getInstance().updateTabeleCena();
 		BazaUlazaTab.getInstance().updateCbUlaz();
 		StatistikaTab.getInstance().updateCbUlaz();

@@ -80,9 +80,9 @@ public class PrintIzvestajUnosaGajbi {
 		 naslov.setFont(veliki);
 		 Label podnsalov = new Label();
 		 if(proizvodjac != null) {
-			 podnsalov.setText("Kooperant: " + proizvodjac.getIme() + " " +  proizvodjac.getPrezime());
+			 podnsalov.setText("Proizvođač: " + proizvodjac.getIme() + " " +  proizvodjac.getPrezime());
 		 }else if(prevoznik != null) {
-			 podnsalov.setText("Kooperan: " + prevoznik.getIme() + " " + prevoznik.getPrezime());
+			 podnsalov.setText("Prevoznik: " + prevoznik.getIme() + " " + prevoznik.getPrezime());
 		 }
 		 podnsalov.setFont(srednji);
 		 Label sezona = new Label("Sezona: " + Firma.getInstance().getTrenutnaGodina().getGodina());

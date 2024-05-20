@@ -20,6 +20,7 @@ public class PonisitiPretraguUnosaGajbi implements EventHandler<ActionEvent> {
 		GajbeTab.getInstance().updateTabeleUnosaGajbi();	
 		GajbeTab.getInstance().getLp1().setText("");
 		GajbeTab.getInstance().getRBSviUnosiGajbiObracun().setSelected(true);
+		GajbeTab.getInstance().updateTabeleGajbi();
 
 
 		

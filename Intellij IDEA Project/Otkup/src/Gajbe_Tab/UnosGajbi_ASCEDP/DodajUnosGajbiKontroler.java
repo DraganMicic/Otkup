@@ -33,7 +33,7 @@ public class DodajUnosGajbiKontroler implements EventHandler<ActionEvent> {
 		
 		GajbeTab.getInstance().getTfSifraUnosaGajbi().setText(String.valueOf(poslednjaSifra+1));
 				
-		GajbeTab.getInstance().getUnosUnosaGajbiFP().setDisable(false);   //podesavam prikaz
+		GajbeTab.getInstance().SetUnosZaduzenjaEnable();  //podesavam prikaz
 		GajbeTab.getInstance().getBDodajUnosGajbe().setDisable(true);		 
 		GajbeTab.getInstance().getBSacuvajUnosGajbe().setDisable(false);
 		GajbeTab.getInstance().getBPonistiUnosGajbe().setDisable(false);			

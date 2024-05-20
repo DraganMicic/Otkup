@@ -12,7 +12,7 @@ public class PonistiGajbuKontroler implements EventHandler<ActionEvent> {
 		GajbeTab.getInstance().setUnosNoveGajbe(false);
 		GajbeTab.getInstance().setIzmenaGajbeUToku(false);
 		
-		GajbeTab.getInstance().getUnosGajbiFP().setDisable(true);    //podesavam prikaz
+		GajbeTab.getInstance().SetUnosGajbeDisable();   //podesavam prikaz
 		GajbeTab.getInstance().getBDodajGajbu().setDisable(false);
 		GajbeTab.getInstance().getBPonistiGajbu().setDisable(true);
 		GajbeTab.getInstance().getBSacuvajGajbu().setDisable(true);

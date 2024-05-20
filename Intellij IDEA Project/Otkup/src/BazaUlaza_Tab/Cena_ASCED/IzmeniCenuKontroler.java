@@ -20,8 +20,7 @@ public class IzmeniCenuKontroler implements EventHandler<ActionEvent> {
 		BazaUlazaTab.getInstance().getDpPocetakVazenjaCene().setValue(cu.getPocetakVazenja());
 		BazaUlazaTab.getInstance().getDpKrajVazenjaCene().setValue(cu.getKrajVazenja());
 	
-		BazaUlazaTab.getInstance().getUnosiCena1HB().setDisable(false);     //podesavam prikaz 
-		BazaUlazaTab.getInstance().getUnosiCena2HB().setDisable(false);
+		BazaUlazaTab.getInstance().SetUnosCenaEnable();   //podesavam prikaz
 		BazaUlazaTab.getInstance().getBObrisiCenu().setDisable(true);
 		BazaUlazaTab.getInstance().getBSacuvajCenu().setDisable(false);
 		BazaUlazaTab.getInstance().getBIzmeniCenu().setDisable(true);

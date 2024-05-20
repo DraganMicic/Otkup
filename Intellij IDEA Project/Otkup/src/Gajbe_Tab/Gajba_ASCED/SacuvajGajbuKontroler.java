@@ -2,6 +2,7 @@ package Gajbe_Tab.Gajba_ASCED;
 
 import java.util.Optional;
 
+import BrzUnosUlaza_tab.BrzUnosUlazaTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -10,7 +11,6 @@ import javafx.scene.control.Alert.AlertType;
 import model.Firma;
 import model.Gajba;
 import Gajbe_Tab.GajbeTab;
-import UnosUlaza_Tab.UnosUlazaTab;
 
 public class SacuvajGajbuKontroler implements EventHandler<ActionEvent> {
 	
@@ -118,7 +118,7 @@ public class SacuvajGajbuKontroler implements EventHandler<ActionEvent> {
 		GajbeTab.getInstance().setIzmenaGajbeUToku(false);
 			
 		GajbeTab.getInstance().ocistiPoljaZaUnosGajbe();	   //podesavam prikaz
-		GajbeTab.getInstance().getUnosGajbiFP().setDisable(true);
+		GajbeTab.getInstance().SetUnosGajbeDisable();
 		GajbeTab.getInstance().getBDodajGajbu().setDisable(false);
 		GajbeTab.getInstance().getBSacuvajGajbu().setDisable(true);
 		GajbeTab.getInstance().getBPonistiGajbu().setDisable(true);
@@ -129,8 +129,8 @@ public class SacuvajGajbuKontroler implements EventHandler<ActionEvent> {
 		
 		GajbeTab.getInstance().updateTabeleUnosaGajbi();
 		GajbeTab.getInstance().updateCBGajba();
-		UnosUlazaTab.getInstance().updateCBGajba();
-		UnosUlazaTab.getInstance().updateTabele();
+		BrzUnosUlazaTab.getInstance().updateCBGajba();
+		BrzUnosUlazaTab.getInstance().updateTabele();
 		GajbeTab.getInstance().updateCBGajbaPretraga();
 	}
 

@@ -1,6 +1,8 @@
 package Prevoz_Tab.Prevoznik_ASCED;
 
 import java.util.Optional;
+
+import BrzUnosUlaza_tab.BrzUnosUlazaTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -11,7 +13,7 @@ import model.Prevoznik;
 import Gajbe_Tab.GajbeTab;
 import Prevoz_Tab.PrevozTab;
 import Proizvodjac_Tab.ProizvodjaciTab;
-import UnosUlaza_Tab.UnosUlazaTab;
+
 
 public class ObrisiKontroler implements EventHandler<ActionEvent> {
 
@@ -38,8 +40,8 @@ public class ObrisiKontroler implements EventHandler<ActionEvent> {
 		
 		ProizvodjaciTab.getInstance().updateTabele();
 		ProizvodjaciTab.getInstance().updateCbPodrazumevaniPrevoznik();
-		UnosUlazaTab.getInstance().updateTabele();
-		UnosUlazaTab.getInstance().updateCBPrevoznik();
+		BrzUnosUlazaTab.getInstance().updateTabele();
+		BrzUnosUlazaTab.getInstance().updateCBPrevoznik();
 		GajbeTab.getInstance().updateTabeleUnosaGajbi();
 		GajbeTab.getInstance().updateCBPrevoznik();
 		GajbeTab.getInstance().updateCBPrevoznikIzvestaj();

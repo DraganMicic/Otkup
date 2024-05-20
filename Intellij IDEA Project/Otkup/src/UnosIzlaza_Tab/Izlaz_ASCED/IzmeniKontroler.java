@@ -1,6 +1,7 @@
 package UnosIzlaza_Tab.Izlaz_ASCED;
 
-import UnosUlaza_Tab.UnosUlazaTab;
+
+import BrzUnosUlaza_tab.BrzUnosUlazaTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import model.UnosIzlaza;
@@ -21,11 +22,11 @@ public class IzmeniKontroler implements EventHandler<ActionEvent> {
 		UnosIzlazaTab.getInstance().getTfBrOtpremnice().setText(String.valueOf(ui.getBrojOtpremnice()));
 		UnosIzlazaTab.getInstance().getTfKolicina().setText(String.valueOf(ui.getKolicina()));
 		
-		UnosIzlazaTab.getInstance().getUnosFp().setDisable(false);     //podesavam prikaz
+		UnosIzlazaTab.getInstance().SetUnosEnable();     //podesavam prikaz
 		UnosIzlazaTab.getInstance().getBObrisi().setDisable(true);
 		UnosIzlazaTab.getInstance().getBSacuvaj().setDisable(false);
 		UnosIzlazaTab.getInstance().getBIzmeni().setDisable(true);
 
-		UnosUlazaTab.getInstance().getTfSifra().requestFocus();
+		BrzUnosUlazaTab.getInstance().getTfSifra().requestFocus();
 	}
 }

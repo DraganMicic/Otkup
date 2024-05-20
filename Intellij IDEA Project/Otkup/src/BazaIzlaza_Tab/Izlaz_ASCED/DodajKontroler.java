@@ -21,7 +21,7 @@ public class DodajKontroler implements EventHandler<ActionEvent> {
 		
 		BazaIzlazaTab.getInstance().getTfSifra().setText(String.valueOf(poslednjaSifra+1));
 				
-		BazaIzlazaTab.getInstance().getUnosHB().setDisable(false);   //podesavam prikaz
+		BazaIzlazaTab.getInstance().SetUnosEnable();   //podesavam prikaz
 		BazaIzlazaTab.getInstance().getBDodaj().setDisable(true);		 
 		BazaIzlazaTab.getInstance().getBSacuvaj().setDisable(false);
 		BazaIzlazaTab.getInstance().getBPonisti().setDisable(false);		

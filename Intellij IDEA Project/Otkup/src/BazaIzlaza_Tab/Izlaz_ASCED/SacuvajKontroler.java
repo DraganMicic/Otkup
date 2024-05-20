@@ -110,7 +110,7 @@ public class SacuvajKontroler implements EventHandler<ActionEvent> {
 		BazaIzlazaTab.getInstance().setIzmenaUToku(false);
 			
 		BazaIzlazaTab.getInstance().ocistiPoljaZaUnos();		   //podesavam prikaz
-		BazaIzlazaTab.getInstance().getUnosHB().setDisable(true);
+		BazaIzlazaTab.getInstance().SetUnosDisable();
 		BazaIzlazaTab.getInstance().getBDodaj().setDisable(false);
 		BazaIzlazaTab.getInstance().getBSacuvaj().setDisable(true);
 		BazaIzlazaTab.getInstance().getBPonisti().setDisable(true);

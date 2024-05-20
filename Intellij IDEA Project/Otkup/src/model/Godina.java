@@ -1223,13 +1223,13 @@ public class Godina {
 		
 	}
 	
-	public ArrayList<Gajba> filtrirajGajbe (String termin) {
+	public ArrayList<Gajba> filtrirajGajbe (Gajba gg) {
 		ArrayList<Gajba> rezultati = new ArrayList<Gajba>();
 		rezultati.addAll(gajbe);
 		
 		ArrayList<Gajba> zaObris = new ArrayList<Gajba>();
 		for(Gajba g : rezultati) {
-			if(!g.getNaziv().toLowerCase().contains(termin.toLowerCase())) {
+			if(!g.equals(gg)) {
 				zaObris.add(g);
 			}
 		}

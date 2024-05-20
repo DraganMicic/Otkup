@@ -143,7 +143,7 @@ public class PrintIzvestajPrevoznika {
 				 l2 = new Label(pro.getIme() + " " + pro.getPrezime());
 				 l2.setPrefWidth(130);
 				 l3 = new Label(Print.getInstance().getFormatter().format(kolicina));
-				 l3.setPrefWidth(100);
+				 l3.setPrefWidth(120);
 				 l5 = new Label(Print.getInstance().getFormatter().format( kolicina*pre.getCenaPoKg()));
 				 l5.setPrefWidth(150);
 				 red.getChildren().addAll(l1,l2,l3,l5);

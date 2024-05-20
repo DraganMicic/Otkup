@@ -1,5 +1,6 @@
 package Proizvodjac_Tab;
 
+import Main.Print;
 import Proizvodjac_Tab.Proizvodjac_ASCED.PonistiKontroler;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -33,7 +34,10 @@ public class ObracunajKontroler implements EventHandler<ActionEvent> {
 			ukupnoIzlaza = pro.ukupnoIzlaza();
 						
 			saldo = ukupnoUlaza-ukupnoIzlaza;			
-			String tekst = "UKUPNO \nkoličina ulaza: " + ukupnoKg + "kg\nvrednost ulaza: " + ukupnoUlaza +"din\nvrednost izlaza: " + ukupnoIzlaza +"din\nsaldo: " + saldo +"din:" ;
+			String tekst = "UKUPNO: \nkoličina ulaza: " + Print.getInstance().getFormatter().format(ukupnoKg)
+					+ "kg\nvrednost ulaza: " + Print.getInstance().getFormatter().format(ukupnoUlaza)
+					+"din\nvrednost izlaza: " + Print.getInstance().getFormatter().format(ukupnoIzlaza) +"din\nsaldo: "
+					+ Print.getInstance().getFormatter().format(saldo) +"din:" ;
 			Alert a = new Alert(AlertType.INFORMATION, tekst);
 			a.setTitle("Brz obračun");
 			a.setHeaderText("Brz obračun za selektovanog proizvođača");
@@ -48,7 +52,10 @@ public class ObracunajKontroler implements EventHandler<ActionEvent> {
 				ukupnoIzlaza += p.ukupnoIzlaza();
 			}
 			saldo = ukupnoUlaza-ukupnoIzlaza;			
-			String tekst = "UKUPNO \nkoličina ulaza: " + ukupnoKg + "kg\nvrednost ulaza: " + ukupnoUlaza +"din\nvrednost izlaza: " + ukupnoIzlaza +"din\nsaldo: " + saldo +"din:" ;
+			String tekst = "UKUPNO \nkoličina ulaza: " + Print.getInstance().getFormatter().format(ukupnoKg)
+					+ "kg\nvrednost ulaza: " + Print.getInstance().getFormatter().format(ukupnoUlaza)
+					+"din\nvrednost izlaza: " + Print.getInstance().getFormatter().format(ukupnoIzlaza) +"din\nsaldo: "
+					+ Print.getInstance().getFormatter().format(saldo) +"din:" ;
 			Alert a = new Alert(AlertType.INFORMATION, tekst);
 			a.setTitle("Brz obračun");
 			a.setHeaderText("Brz obračun za trenutno prikazane(filtrirane) prozivođače");

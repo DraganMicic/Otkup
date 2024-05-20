@@ -1,5 +1,6 @@
 package Prevoz_Tab.Tools_K;
 
+import Main.Print;
 import Prevoz_Tab.Prevoznik_ASCED.PonistiKontroler;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,7 +23,9 @@ public class ObracunajKontroler implements EventHandler<ActionEvent>{
 				ukupnaKolicina += p.getKolicna();
 				ukupnaVrednost += p.getKolicna()*p.getPrevoznik().getCenaPoKg();
 			}
-			String tekst = "UKUPNO \nprevežena kolicina: " + ukupnaKolicina + "kg\nvrednost prevoza: " + ukupnaVrednost + "din:" ;
+			String tekst = "UKUPNO \nprevežena kolicina: "
+					+ Print.getInstance().getFormatter().format( ukupnaKolicina) + "kg\nvrednost prevoza: "
+					+ Print.getInstance().getFormatter().format(ukupnaVrednost) + "din:" ;
 			Alert a = new Alert(AlertType.INFORMATION, tekst);
 			a.setTitle("Brz obračun");
 			a.setHeaderText("Brz obračun za selektovanog prevozmika");
@@ -34,7 +37,9 @@ public class ObracunajKontroler implements EventHandler<ActionEvent>{
 				ukupnaKolicina += p.getKolicna();
 				ukupnaVrednost += p.getKolicna()*p.getPrevoznik().getCenaPoKg();
 			}
-			String tekst = "UKUPNO \nprevežena kolicina: " + ukupnaKolicina + "kg\nvrednost prevoza: " + ukupnaVrednost + "din:" ;
+			String tekst = "UKUPNO \nprevežena kolicina: "
+					+ Print.getInstance().getFormatter().format(ukupnaKolicina) + "kg\nvrednost prevoza: "
+					+ Print.getInstance().getFormatter().format(ukupnaVrednost) + "din:" ;
 			Alert a = new Alert(AlertType.INFORMATION, tekst);
 			a.setTitle("Brz obračun");
 			a.setHeaderText("Brz obračun za selektovanog prevozmika");
@@ -50,7 +55,9 @@ public class ObracunajKontroler implements EventHandler<ActionEvent>{
 			Prevoznik pre = PrevozTab.getInstance().getTabelaPrevoznika().getSelectionModel().getSelectedItem();
 			ukupnaKolicina = Firma.getInstance().getTrenutnaGodina().ukupnaKolicinaZaPrevoznika(pre);
 			ukupnaVrednost = ukupnaKolicina * pre.getCenaPoKg();
-			String tekst = "UKUPNO \nprevežena kolicina: " + ukupnaKolicina + "kg\nvrednost prevoza: " + ukupnaVrednost + "din:" ;
+			String tekst = "UKUPNO \nprevežena kolicina: "
+					+ Print.getInstance().getFormatter().format(ukupnaKolicina) + "kg\nvrednost prevoza: "
+					+ Print.getInstance().getFormatter().format(ukupnaVrednost) + "din:" ;
 			Alert a = new Alert(AlertType.INFORMATION, tekst);
 			a.setTitle("Brz obračun");
 			a.setHeaderText("Brz obračun za selektovanog prevozmika");

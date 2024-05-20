@@ -21,8 +21,7 @@ public class DodajCenuKontroler implements EventHandler<ActionEvent> {
 		
 		BazaUlazaTab.getInstance().getTfSifraCene().setText(String.valueOf(poslednjaSifra+1));
 				
-		BazaUlazaTab.getInstance().getUnosiCena1HB().setDisable(false);   //podesavam prikaz
-		BazaUlazaTab.getInstance().getUnosiCena2HB().setDisable(false);
+		BazaUlazaTab.getInstance().SetUnosCenaEnable();  //podesavam prikaz
 		BazaUlazaTab.getInstance().getBDodajCenu().setDisable(true);		 
 		BazaUlazaTab.getInstance().getBSacuvajCenu().setDisable(false);
 		BazaUlazaTab.getInstance().getBPonistiCenu().setDisable(false);		

@@ -144,7 +144,7 @@ public class SacuvajPodesavanjaKontroler implements EventHandler<ActionEvent> {
 			return;
 		}
 		
-		PodesavanjaTab.getInstance().getPodesavanjaVb().setDisable(true);
+		PodesavanjaTab.getInstance().SetEditDisable();
 		PodesavanjaTab.getInstance().getBSacuvaj().setDisable(true);
 		PodesavanjaTab.getInstance().getBIzmeni().setDisable(false);
 		PodesavanjaTab.getInstance().getBOdustani().setDisable(true);

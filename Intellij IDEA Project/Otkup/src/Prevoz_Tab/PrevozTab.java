@@ -1,59 +1,53 @@
 package Prevoz_Tab;
 
 import java.util.Date;
-import Prevoz_Tab.Prevoznik_ASCED.DodajKontroler;
-import Prevoz_Tab.Prevoznik_ASCED.IzmeniKontroler;
-import Prevoz_Tab.Prevoznik_ASCED.ObrisiKontroler;
-import Prevoz_Tab.Prevoznik_ASCED.PonistiKontroler;
+
+import Main.ComboBoxAutoComplete;
+import Prevoz_Tab.Prevoznik_ASCED.*;
 import Prevoz_Tab.Tools_K.ObracunajKontroler;
 import Prevoz_Tab.Tools_K.PonistiPretraguPrevoznikaKontroler;
-import Prevoz_Tab.Prevoznik_ASCED.SacuvajKontroler;
 import Prevoz_Tab.Tools_K.StampajIzvestajKontroler;
 import Prevoz_Tab.Tools_K.StampajSpisakPrevoznikaKOntroler;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.text.Font;
-import model.Firma;
-import model.Prevoz;
-import model.Prevoznik;
-import model.Proizvodjac; 
+import javafx.stage.Screen;
+import model.*;
 
 public class PrevozTab extends VBox {
 	
 	private static PrevozTab instance;
-	
-	private HBox zajednickoHB;
-	
-	private VBox prevozniciVB;
-	private VBox prevoziVB;
+
+	private HBox unosITabelaHb;
 	
 	private boolean unosNovog=false;
 	private boolean izmenaUToku = false;
-	
-	private HBox unosHB;					 //inicijalizujem komponente za prevoznike
-	private TextField tfSifra;    
+
+	private GridPane unosGp;		//inicijalizujem komponente za prevoznike
+	private  Label lsifra;
+	private TextField tfSifra;
+	private Label lime;
 	private TextField tfIme;
+	private Label lprezime;
 	private TextField tfPrezime;
+	private  Label lopis;
 	private TextField tfOpis;
+	private Label lcenapokg;
 	private TextField tfCenaPoKg;
-	
+
 	private Button BDodaj;
 	private Button BSacuvaj;
 	private Button BPonisti;
@@ -61,7 +55,8 @@ public class PrevozTab extends VBox {
 	private Button BObrisi;
 	
 	private TableView<Prevoznik> tabelaPrevoznika;
-	
+
+	private HBox pretragaPrevoznikaHB;
 	private TextField tfPretragaPrevoznika;
 	private RadioButton RBDanPretraga;
 	private RadioButton RBPeriodPretraga;
@@ -72,7 +67,8 @@ public class PrevozTab extends VBox {
 	private DatePicker DPPocetniPretraga;
 	private DatePicker DPKrajnjiPretraga;
 	private Button BPonistiPretraguPrevoznika;
-	
+
+	private  HBox spisakPrevoznikaHB;
 	private RadioButton RBsviPrevozniciSpisak;
 	private RadioButton RBFiltrriraniPrevozniciSpisak;
 	private ToggleGroup TGSpisakPrevoznika;
@@ -80,122 +76,166 @@ public class PrevozTab extends VBox {
 	private RadioButton RBPodaciSaSaldomSpisak;
 	private ToggleGroup TGVrstaSpiska;
 	private Button BStampajSpisakPrevoznika;
-	
+
+	private HBox obracunHB;
 	private RadioButton RBSviObracun;
 	private RadioButton RBFiltriraniObracun;
 	private RadioButton RBSelektovaniObracun;
 	private ToggleGroup TGObracun;
 	private Button BObracunaj;
-	
+
+	private  ComboBox<Prevoznik> cbPrevoznikIzvestaj;
 	private Button BStampajIzvestaj;
 	private HBox stampaIzvestajaHB;
 		
 	private TableView<Prevoz> tabelaPrevoza; //inicijalizujem komponente za prevoze
 	
 	private PrevozTab() {       					//konstruktorrr
-		
-		zajednickoHB = new HBox(20);
-		prevozniciVB = new VBox(15);
-		prevozniciVB.setPrefWidth(1100);
-		prevoziVB = new VBox(15);
-		prevoziVB.setPrefWidth(1000);
 
-		
-		Label naslov2 = new Label("Prevoznici:");
-		naslov2.setFont(new Font(35));
-		prevozniciVB.getChildren().add(naslov2);
-		
-		Label naslov3 = new Label("Prevozi:");
-		naslov3.setFont(new Font(35));
-		prevoziVB.getChildren().add(naslov3);
-			
 		setPadding(new Insets(10,20,10,20));  //podesavam ceo tab
 		setSpacing(15);
-		
-		trakaZaUnos();   //dodajem delove
-		trakaKomandi();
-		tabelaPrevoznika();	
-		tabelaPrevoza();
+		this.setMinHeight(Screen.getPrimary().getBounds().getHeight()-80);
 
-		
-		zajednickoHB.getChildren().addAll(prevozniciVB,prevoziVB);
-		this.getChildren().add(zajednickoHB);
-		
+		//naslov 1
+		Label naslov = new Label("Baza prevoznika:");
+		naslov.setFont(new Font(35));
+		Separator separator = new Separator();
+		this.getChildren().addAll(naslov,separator);
+
+		//unos i tabela
+		unosITabelaHb = new HBox(20);
+		this.getChildren().add(unosITabelaHb);
+
+		//podesavanja grid panea
+		unosGp = new GridPane();
+		unosGp.setPadding(new Insets(10, 10, 10, 10));
+		unosGp.setVgap(10);
+		unosGp.setHgap(10);
+		unosGp.setAlignment(Pos.BASELINE_LEFT);
+		unosGp.setStyle("-fx-font: 20px \"Serif\";");
+		unosGp.setMinWidth(690);
+
+		unos();
+		tabelaPrevoznika();
+		tabelaPrevoznika.setPrefWidth(1300);
+		tabelaPrevoznika.setPrefHeight(350);
+
+		Separator separator2 = new Separator();
+		separator2.setOrientation(Orientation.VERTICAL);
+		unosITabelaHb.getChildren().addAll(unosGp,separator2,tabelaPrevoznika);
+
+		tabelaPrevoza();
+		tabelaPrevoza.setPrefWidth(1300);
+		tabelaPrevoza.setPrefHeight(400);
+
+		//naslov2
+		Label naslov2 = new Label("Prevozi:");
+		naslov2.setFont(new Font(35));
+		Separator separator1 = new Separator();
+		this.getChildren().addAll(naslov2,separator1,tabelaPrevoza);
+
+		//naslov3
+		Label naslov3 = new Label("Alati:");
+		naslov3.setFont(new Font(35));
+		Separator separator3 = new Separator();
+		this.getChildren().addAll(naslov3,separator3);
+
+		//alati
 		pretragaPrevoznika();
 		brzObracun();
 		spisakPrevoznika();
 		StampaIzvestaja();
+		this.getChildren().addAll(pretragaPrevoznikaHB,obracunHB,spisakPrevoznikaHB,stampaIzvestajaHB);
+
+		//pocetni update
+
+
 
 	}
-	
-	private void trakaZaUnos() {
-		
-		tfSifra = new TextField();               //podesavam komponente
-		tfSifra.setPrefWidth(40);
-		tfIme = new TextField();
-		tfIme.setPrefWidth(120);
-		tfPrezime = new TextField();
-		tfPrezime.setPrefWidth(120);
-		tfOpis = new TextField();
-		tfOpis.setPrefWidth(120);
-		tfCenaPoKg = new TextField();
-		tfCenaPoKg.setPrefWidth(50);
-		
-		unosHB = new HBox(10);                     //pravim odeljak za unos nnovih i izmene
-		unosHB.setAlignment(Pos.BASELINE_LEFT);
-			 
-		unosHB.getChildren().add(new Label("šifra:"));      //dodajem sta treba u blok za unos i izmene
-		unosHB.getChildren().add(tfSifra);
-		unosHB.getChildren().add(new Label("ime:"));
-		unosHB.getChildren().add(tfIme);
-		unosHB.getChildren().add(new Label("prezime:"));
-		unosHB.getChildren().add(tfPrezime);
-		unosHB.getChildren().add(new Label("opis:"));
-		unosHB.getChildren().add(tfOpis);
-		unosHB.getChildren().add(new Label("cena prevoza (din/kg):"));
-		unosHB.getChildren().add(tfCenaPoKg);
-				
-		prevozniciVB.getChildren().add(unosHB);
-		
-		unosHB.setDisable(true);
-	}
-	
-	private void trakaKomandi() {       //dodajem sta treba u traku komandi 
-		
-		BDodaj = new Button("dodaj");
+
+	private void  unos(){
+
+		//DUGMICI///////////////////////////////////////////////////////////////////////////////
+		BDodaj = new Button("Dodaj");
 		ImageView add = new ImageView(Firma.getInstance().getAddIco());
-		BDodaj.setGraphic(add); 
+		BDodaj.setGraphic(add);
+		BDodaj.setPrefWidth(200);
 		BDodaj.setOnAction(new DodajKontroler());
-		
-		BSacuvaj = new Button("sačuvaj");
+
+		BSacuvaj = new Button("Sačuvaj");
 		ImageView save = new ImageView(Firma.getInstance().getSaveIco());
 		BSacuvaj.setGraphic(save);
+		BSacuvaj.setPrefWidth(200);
 		BSacuvaj.setOnAction(new SacuvajKontroler());
 		BSacuvaj.setDisable(true);
-		
-		BPonisti = new Button("odustani");
+
+		BPonisti = new Button("Stop");
 		ImageView cancel = new ImageView(Firma.getInstance().getCloseIco());
 		BPonisti.setGraphic(cancel);
+		BPonisti.setPrefWidth(200);
 		BPonisti.setOnAction(new PonistiKontroler());
 		BPonisti.setDisable(true);
-		
-		BIzmeni = new Button("izmeni");
+
+		BIzmeni = new Button("Izmeni");
 		ImageView edit = new ImageView(Firma.getInstance().getEditIco());
 		BIzmeni.setGraphic(edit);
-		BIzmeni.setDisable(true);
+		BIzmeni.setPrefWidth(200);
 		BIzmeni.setOnAction(new IzmeniKontroler());
-		
-		BObrisi = new Button("obriši");
+		BIzmeni.setDisable(true);
+
+		BObrisi = new Button("Obriši");
 		ImageView delete = new ImageView(Firma.getInstance().getDeleteIco());
 		BObrisi.setGraphic(delete);
-		BObrisi.setDisable(true);
+		BObrisi.setPrefWidth(200);
 		BObrisi.setOnAction(new ObrisiKontroler());
-		
-		HBox komandeHB = new HBox(10);
-		komandeHB.getChildren().addAll(BDodaj,BSacuvaj,BPonisti,BIzmeni,BObrisi);
-		prevozniciVB.getChildren().add(komandeHB);
+		BObrisi.setDisable(true);
+
+		//dodavanje gornjih dugmica
+		unosGp.add(BDodaj,0,0,1,1);
+		unosGp.add(BSacuvaj,1,0,1,1);
+		unosGp.add(BPonisti,2,0,1,1);
+		unosGp.add(BIzmeni,3,0,1,1);
+		unosGp.add(BObrisi,4,0,1,1);
+
+		tfSifra = new TextField();               //podesavam komponente
+		tfSifra.setPrefWidth(200);
+
+		tfIme = new TextField();
+		tfIme.setPrefWidth(410);
+
+		tfPrezime = new TextField();
+		tfPrezime.setPrefWidth(410);
+
+		tfOpis = new TextField();
+		tfOpis.setPrefWidth(410);
+
+		tfCenaPoKg = new TextField();
+		tfCenaPoKg.setPrefWidth(200);
+		tfCenaPoKg.setPromptText("[din]");
+
+		lsifra = new Label("Šifra:");
+		unosGp.add(lsifra,0,2,1,1);
+		unosGp.add(tfSifra,1,2,1,1);
+
+		lime = new Label("Ime:");
+		unosGp.add(lime,0,3,1,1);
+		unosGp.add(tfIme,1,3,2,1);
+
+		lprezime = new Label("Prezime:");
+		unosGp.add(lprezime,0,4,1,1);
+		unosGp.add(tfPrezime,1,4,2,1);
+
+		lopis = new Label("Opis:");
+		unosGp.add(lopis,0,5,1,1);
+		unosGp.add(tfOpis,1,5,2,1);
+
+		lcenapokg = new Label("Cena po kg.:");
+		unosGp.add(lcenapokg,0,6,1,1);
+		unosGp.add(tfCenaPoKg,1,6,1,1);
+
+		SetuUnosDisable();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void tabelaPrevoznika() {                 ///////////////////////formiram tabelu
 		
@@ -219,8 +259,6 @@ public class PrevozTab extends VBox {
 		tabelaPrevoznika.getColumns().addAll(tcSifra,tcIme,tcPrezime,tcOpis,tcCenaPoKg);
 		
 		updateTabelePrevoznika();
-		
-		prevozniciVB.getChildren().add(tabelaPrevoznika);
 		
 		tabelaPrevoznika.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {  //kad se selektuje nesto u tabeli da se updatuju dugmici
 		    if (newSelection != null && unosNovog == false && izmenaUToku == false) {
@@ -255,14 +293,17 @@ public class PrevozTab extends VBox {
 		
 		TableColumn <Prevoz, Proizvodjac> tcProizvodjac = new TableColumn<Prevoz,Proizvodjac>("proizvodjac");		
 		tcProizvodjac.setCellValueFactory(new PropertyValueFactory<Prevoz, Proizvodjac>("proizvodjac"));
+
+		tcDatum.setPrefWidth(200);
+		tcPrevoznik.setPrefWidth(350);
+		tcKolicina.setPrefWidth(280);
+		tcProizvodjac.setPrefWidth(350);
 		
 		tabelaPrevoza.getColumns().addAll(tcSifra,tcDatum,tcPrevoznik,tcKolicina,tcProizvodjac);
 	
 		tabelaPrevoza.setPrefHeight(482);
 		
 		updateTabelePrevoza();
-		
-		prevoziVB.getChildren().add(tabelaPrevoza);
 		
 		tabelaPrevoza.scrollTo(tabelaPrevoza.getItems().size());
 		
@@ -282,14 +323,19 @@ public class PrevozTab extends VBox {
 	}
 	
 	private void pretragaPrevoznika() {
-		HBox pretragaPrevoznikaHB = new HBox(10);
+
+		pretragaPrevoznikaHB = new HBox(10);
+		pretragaPrevoznikaHB.setStyle("-fx-font: 17px \"Serif\";");
 		pretragaPrevoznikaHB.setAlignment(Pos.BASELINE_LEFT);
 		ImageView search = new ImageView(Firma.getInstance().getSearchIco());
 		pretragaPrevoznikaHB.getChildren().add(search);
 		Label pl = new Label("Pretraga/filtriranje:  ");
-		pl.setFont(new Font(20));
-		pretragaPrevoznikaHB.getChildren().add(pl);			
-		RBDanPretraga = new RadioButton("dan");
+		pl.setStyle("-fx-font: 25px \"System\";");
+		pretragaPrevoznikaHB.getChildren().add(pl);
+		Label l = new Label("  dan");
+		l.setMinWidth(30);
+		RBDanPretraga = new RadioButton();
+		RBDanPretraga.setGraphic(l);
 		RBPeriodPretraga = new RadioButton("period");
 		TGPretraga = new ToggleGroup();
 		RBDanPretraga.setToggleGroup(TGPretraga);
@@ -298,19 +344,20 @@ public class PrevozTab extends VBox {
 		RBDanPretraga.setSelected(true);
 		DPPocetniPretraga = new DatePicker();
 		DPKrajnjiPretraga = new DatePicker();
-		DPPocetniPretraga.setPrefWidth(120);
-		DPKrajnjiPretraga.setPrefWidth(120);
+		DPPocetniPretraga.setPrefWidth(160);
+		DPKrajnjiPretraga.setPrefWidth(160);
 		Lod = new Label("datum:");
 		Ldo = new Label("do:");
 		pretragaPrevoznikaHB.getChildren().addAll(Lod,DPPocetniPretraga);
-		pretragaPrevoznikaHB.getChildren().add(new Label("ime i/ili prezime prevoznika:"));
+		pretragaPrevoznikaHB.getChildren().add(new Label("prevoznik:"));
 		tfPretragaPrevoznika = new TextField();
 		tfPretragaPrevoznika.setPrefWidth(150);
 		pretragaPrevoznikaHB.getChildren().add(tfPretragaPrevoznika);	
-		BPonistiPretraguPrevoznika = new  Button("poništi");
+		BPonistiPretraguPrevoznika = new  Button("Poništi");
 		ImageView close = new ImageView(Firma.getInstance().getCloseIco());
 		BPonistiPretraguPrevoznika.setGraphic(close);
 		BPonistiPretraguPrevoznika.setDisable(true);
+		BPonistiPretraguPrevoznika.setPrefWidth(110);
 		pretragaPrevoznikaHB.getChildren().add(BPonistiPretraguPrevoznika);
 		BPonistiPretraguPrevoznika.setOnAction(new PonistiPretraguPrevoznikaKontroler());
 		
@@ -367,7 +414,6 @@ public class PrevozTab extends VBox {
 					BPonistiPretraguPrevoznika.setDisable(false);
 
 				}
-				
 
 			}
 		});
@@ -386,20 +432,20 @@ public class PrevozTab extends VBox {
 
 			}
 		});
-		
-		getChildren().add(pretragaPrevoznikaHB);
+
 	}
  
 	private void brzObracun() {
-		HBox obracunHB = new HBox(10);
+
+		obracunHB = new HBox(10);
+		obracunHB.setStyle("-fx-font: 17px \"Serif\";");
 		obracunHB.setAlignment(Pos.BASELINE_LEFT);
 		ImageView obracun = new ImageView(Firma.getInstance().getObracunIco());
 		obracunHB.getChildren().add(obracun);
 		Label ol = new Label("Brz obračun:  ");
-		ol.setFont(new Font(20));
+		ol.setStyle("-fx-font: 25px \"System\";");
 		obracunHB.getChildren().add(ol);
 		Label lll = new Label("Obračunaj za:  ");
-		lll.setFont(new Font(15));
 		obracunHB.getChildren().add(lll);
 		RBSelektovaniObracun = new RadioButton("selektovanog prevoznika");
 		RBSviObracun = new RadioButton("sve prvoze");
@@ -410,26 +456,26 @@ public class PrevozTab extends VBox {
 		RBSelektovaniObracun.setToggleGroup(TGObracun);
 		RBSviObracun.setSelected(true);
 		obracunHB.getChildren().addAll(RBSelektovaniObracun,RBFiltriraniObracun,RBSviObracun );
-		BObracunaj = new Button("obračunaj");
+		BObracunaj = new Button("Obračunaj");
 		ImageView obracunaj = new ImageView(Firma.getInstance().getObracunIco());
 		BObracunaj.setGraphic(obracunaj);
+		BObracunaj.setPrefWidth(130);
 		BObracunaj.setOnAction(new ObracunajKontroler());
 		obracunHB.getChildren().add(BObracunaj);
-		
-		getChildren().add(obracunHB);
 			
 	}
 		
 	private void spisakPrevoznika() {
-		HBox spisakPrevoznikaHB = new HBox(10);
+
+		spisakPrevoznikaHB = new HBox(10);
+		spisakPrevoznikaHB.setStyle("-fx-font: 17px \"Serif\";");
 		spisakPrevoznikaHB.setAlignment(Pos.BASELINE_LEFT);
 		ImageView lista = new ImageView(Firma.getInstance().getLisaIco());
 		spisakPrevoznikaHB.getChildren().add(lista);
 		Label sl = new Label("Štampa spiska prevoznika:   ");
-		sl.setFont(new Font(20));
+		sl.setStyle("-fx-font: 25px \"System\";");
 		spisakPrevoznikaHB.getChildren().add(sl);
 		Label kkk = new Label("Uvrsti:  ");
-		kkk.setFont(new Font(15));
 		spisakPrevoznikaHB.getChildren().add(kkk);
 		RBsviPrevozniciSpisak = new RadioButton("sve");
 		RBFiltrriraniPrevozniciSpisak = new RadioButton("filtrirane");
@@ -439,7 +485,6 @@ public class PrevozTab extends VBox {
 		RBsviPrevozniciSpisak.setToggleGroup(TGSpisakPrevoznika);
 		spisakPrevoznikaHB.getChildren().addAll(RBsviPrevozniciSpisak,RBFiltrriraniPrevozniciSpisak);
 		Label ooo = new Label("Vrsta spiska:   ");
-		ooo.setFont(new Font(15));
 		spisakPrevoznikaHB.getChildren().add(ooo);
 		RBSamoImenaSpisak = new RadioButton("samo podaci");
 		RBPodaciSaSaldomSpisak = new RadioButton("podaci sa ukupnim kolicinama");
@@ -448,35 +493,49 @@ public class PrevozTab extends VBox {
 		RBPodaciSaSaldomSpisak.setToggleGroup(TGVrstaSpiska);
 		RBSamoImenaSpisak.setSelected(true);
 		spisakPrevoznikaHB.getChildren().addAll(RBSamoImenaSpisak,RBPodaciSaSaldomSpisak);
-		BStampajSpisakPrevoznika = new Button("štampaj");
+		BStampajSpisakPrevoznika = new Button("Štampaj");
 		ImageView ss = new ImageView(Firma.getInstance().getPrintIco());
 		BStampajSpisakPrevoznika.setGraphic(ss);
+		BStampajSpisakPrevoznika.setPrefWidth(110);
 		spisakPrevoznikaHB.getChildren().add(BStampajSpisakPrevoznika);
 		BStampajSpisakPrevoznika.setOnAction(new StampajSpisakPrevoznikaKOntroler());
-		getChildren().add(spisakPrevoznikaHB);				
+
 	}
 
 	private void StampaIzvestaja() {
+
 		stampaIzvestajaHB = new HBox(10);
+		stampaIzvestajaHB.setStyle("-fx-font: 17px \"Serif\";");
 		stampaIzvestajaHB.setAlignment(Pos.BASELINE_LEFT);
 		ImageView st = new ImageView(Firma.getInstance().getPrintIco());
 		stampaIzvestajaHB.getChildren().add(st);
 		Label l1 = new Label("Štampa izveštaja:   ");
-		l1.setFont(new Font(20));
+		l1.setStyle("-fx-font: 25px \"System\";");
 		stampaIzvestajaHB.getChildren().add(l1);
-		Label l2 = new Label("Za selektovanog prevoznika   ");
-		l2.setFont(new Font(15));
+		Label l2 = new Label("Za prevoznika:   ");
 		stampaIzvestajaHB.getChildren().add(l2);
+		cbPrevoznikIzvestaj = new ComboBox<>();
+		cbPrevoznikIzvestaj.setPrefWidth(300);
+		stampaIzvestajaHB.getChildren().add(cbPrevoznikIzvestaj);
 		ImageView close = new ImageView(Firma.getInstance().getPrintIco());
-		BStampajIzvestaj = new Button("štampaj");
+		BStampajIzvestaj = new Button("Štampaj");
 		BStampajIzvestaj.setGraphic(close);
 		BStampajIzvestaj.setOnAction(new StampajIzvestajKontroler());
+		BStampajIzvestaj.setPrefWidth(110);
 		stampaIzvestajaHB.getChildren().add(BStampajIzvestaj);
-		getChildren().add(stampaIzvestajaHB);
+
+		updatecbPrevoznikIzvestaj();
 		
 	}
 
+	public void updatecbPrevoznikIzvestaj(){
 
+		cbPrevoznikIzvestaj.getItems().clear();
+		cbPrevoznikIzvestaj.getItems().addAll(FXCollections.observableList(Firma.getInstance().getTrenutnaGodina().getPrevoznici()));
+		cbPrevoznikIzvestaj.setTooltip(new Tooltip());
+		new ComboBoxAutoComplete<Prevoznik>(cbPrevoznikIzvestaj);
+
+	}
 	
 	public void ocistiPoljaZaUnos() {   //cisti sva polja za unos		
 		tfSifra.clear();
@@ -485,12 +544,61 @@ public class PrevozTab extends VBox {
 		tfOpis.clear();
 		tfCenaPoKg.clear();
 	}
+
+	public void SetuUnosEnable(){
+
+		lsifra.setDisable(false);
+		tfSifra.setDisable(false);
+		lime.setDisable(false);
+		tfIme.setDisable(false);
+		lprezime.setDisable(false);
+		tfPrezime.setDisable(false);
+		lopis.setDisable(false);
+		tfOpis.setDisable(false);
+		lcenapokg.setDisable(false);
+		tfCenaPoKg.setDisable(false);
+	}
+
+	public void SetuUnosDisable(){
+
+		lsifra.setDisable(true);
+		tfSifra.setDisable(true);
+		lime.setDisable(true);
+		tfIme.setDisable(true);
+		lprezime.setDisable(true);
+		tfPrezime.setDisable(true);
+		lopis.setDisable(true);
+		tfOpis.setDisable(true);
+		lcenapokg.setDisable(true);
+		tfCenaPoKg.setDisable(true);
+	}
+
+	public void  setColor(String gore, String dole){
+
+		LinearGradient gradient = new LinearGradient(
+				0, 0, 0, 1, true, javafx.scene.paint.CycleMethod.NO_CYCLE,
+				new javafx.scene.paint.Stop(0, Color.web(gore)),
+				new javafx.scene.paint.Stop(1, Color.web(dole))
+		);
+
+		// Creating a BackgroundFill with the linear gradient
+		BackgroundFill backgroundFill = new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY);
+
+		// Creating a Background with the BackgroundFill
+		Background background = new Background(backgroundFill);
+
+		this.setBackground(background);
+	}
 		
 	public static PrevozTab getInstance() {  //get instance 
 		if (instance == null) {
 			instance = new PrevozTab();
 		}
 		return instance;
+	}
+
+	public ComboBox<Prevoznik> getCbPrevoznikIzvestaj() {
+		return cbPrevoznikIzvestaj;
 	}
 
 	public boolean isUnosNovog() {
@@ -509,244 +617,68 @@ public class PrevozTab extends VBox {
 		this.izmenaUToku = izmenaUToku;
 	}
 
-	public RadioButton getRBDanPretraga() {
-		return RBDanPretraga;
-	}
-
-	public void setRBDanPretraga(RadioButton rBDanPretraga) {
-		RBDanPretraga = rBDanPretraga;
-	}
-
-	public RadioButton getRBPeriodPretraga() {
-		return RBPeriodPretraga;
-	}
-
-	public Button getBStampajIzvestaj() {
-		return BStampajIzvestaj;
-	}
-
-	public void setBStampajIzvestaj(Button bStampajIzvestaj) {
-		BStampajIzvestaj = bStampajIzvestaj;
-	}
-
-	public HBox getStampaIzvestajaHB() {
-		return stampaIzvestajaHB;
-	}
-
-	public void setStampaIzvestajaHB(HBox stampaIzvestajaHB) {
-		this.stampaIzvestajaHB = stampaIzvestajaHB;
-	}
-
-	public void setRBPeriodPretraga(RadioButton rBPeriodPretraga) {
-		RBPeriodPretraga = rBPeriodPretraga;
-	}
-
-	public ToggleGroup getTGPretraga() {
-		return TGPretraga;
-	}
-
 	public RadioButton getRBSviObracun() {
 		return RBSviObracun;
-	}
-
-	public void setRBSviObracun(RadioButton rBSviObracun) {
-		RBSviObracun = rBSviObracun;
 	}
 
 	public RadioButton getRBFiltriraniObracun() {
 		return RBFiltriraniObracun;
 	}
 
-	public void setRBFiltriraniObracun(RadioButton rBFiltriraniObracun) {
-		RBFiltriraniObracun = rBFiltriraniObracun;
-	}
-
 	public RadioButton getRBSelektovaniObracun() {
 		return RBSelektovaniObracun;
-	}
-
-	public void setRBSelektovaniObracun(RadioButton rBSelektovaniObracun) {
-		RBSelektovaniObracun = rBSelektovaniObracun;
-	}
-
-	public ToggleGroup getTGObracun() {
-		return TGObracun;
-	}
-
-	public void setTGObracun(ToggleGroup tGObracun) {
-		TGObracun = tGObracun;
-	}
-
-	public Button getBObracunaj() {
-		return BObracunaj;
-	}
-
-	public void setBObracunaj(Button bObracunaj) {
-		BObracunaj = bObracunaj;
-	}
-
-	public void setTGPretraga(ToggleGroup tGPretraga) {
-		TGPretraga = tGPretraga;
-	}
-
-	public Label getLod() {
-		return Lod;
-	}
-
-	public void setLod(Label lod) {
-		Lod = lod;
-	}
-
-	public Label getLdo() {
-		return Ldo;
-	}
-
-	public void setLdo(Label ldo) {
-		Ldo = ldo;
-	}
-
-	public int getPozicija() {
-		return pozicija;
-	}
-
-	public void setPozicija(int pozicija) {
-		this.pozicija = pozicija;
 	}
 
 	public DatePicker getDPPocetniPretraga() {
 		return DPPocetniPretraga;
 	}
 
-	public void setDPPocetniPretraga(DatePicker dPPocetniPretraga) {
-		DPPocetniPretraga = dPPocetniPretraga;
-	}
-
 	public DatePicker getDPKrajnjiPretraga() {
 		return DPKrajnjiPretraga;
-	}
-
-	public void setDPKrajnjiPretraga(DatePicker dPKrajnjiPretraga) {
-		DPKrajnjiPretraga = dPKrajnjiPretraga;
-	}
-
-	public HBox getUnosHB() {
-		return unosHB;
-	}
-
-	public void setUnosHB(HBox unosHB) {
-		this.unosHB = unosHB;
 	}
 
 	public TextField getTfSifra() {
 		return tfSifra;
 	}
 
-	public void setTfSifra(TextField tfSifra) {
-		this.tfSifra = tfSifra;
-	}	
-
 	public RadioButton getRBsviPrevozniciSpisak() {
 		return RBsviPrevozniciSpisak;
-	}
-
-	public void setRBsviPrevozniciSpisak(RadioButton rBsviPrevozniciSpisak) {
-		RBsviPrevozniciSpisak = rBsviPrevozniciSpisak;
 	}
 
 	public RadioButton getRBFiltrriraniPrevozniciSpisak() {
 		return RBFiltrriraniPrevozniciSpisak;
 	}
 
-	public void setRBFiltrriraniPrevozniciSpisak(RadioButton rBFiltrriraniPrevozniciSpisak) {
-		RBFiltrriraniPrevozniciSpisak = rBFiltrriraniPrevozniciSpisak;
-	}
-
 	public RadioButton getRBSamoImenaSpisak() {
 		return RBSamoImenaSpisak;
-	}
-
-	public void setRBSamoImenaSpisak(RadioButton rBSamoImenaSpisak) {
-		RBSamoImenaSpisak = rBSamoImenaSpisak;
 	}
 
 	public RadioButton getRBPodaciSaSaldomSpisak() {
 		return RBPodaciSaSaldomSpisak;
 	}
 
-	public void setRBPodaciSaSaldomSpisak(RadioButton rBPodaciSaSaldomSpisak) {
-		RBPodaciSaSaldomSpisak = rBPodaciSaSaldomSpisak;
-	}
-
-	public ToggleGroup getTGVrstaSpiska() {
-		return TGVrstaSpiska;
-	}
-
-	public void setTGVrstaSpiska(ToggleGroup tGVrstaSpiska) {
-		TGVrstaSpiska = tGVrstaSpiska;
-	}
-
-	public ToggleGroup getTGSpisakPrevoznika() {
-		return TGSpisakPrevoznika;
-	}
-
-	public void setTGSpisakPrevoznika(ToggleGroup tGSpisakPrevoznika) {
-		TGSpisakPrevoznika = tGSpisakPrevoznika;
-	}
-
-	public Button getBStampajSpisakPrevoznika() {
-		return BStampajSpisakPrevoznika;
-	}
-
-	public void setBStampajSpisakPrevoznika(Button bStampajSpisakPrevoznika) {
-		BStampajSpisakPrevoznika = bStampajSpisakPrevoznika;
-	}
-
 	public TextField getTfIme() {
 		return tfIme;
-	}
-
-	public void setTfIme(TextField tfIme) {
-		this.tfIme = tfIme;
 	}
 
 	public TextField getTfPrezime() {
 		return tfPrezime;
 	}
 
-	public void setTfPrezime(TextField tfPrezime) {
-		this.tfPrezime = tfPrezime;
-	}
-
 	public TextField getTfOpis() {
 		return tfOpis;
-	}
-
-	public void setTfOpis(TextField tfOpis) {
-		this.tfOpis = tfOpis;
 	}
 
 	public TextField getTfCenaPoKg() {
 		return tfCenaPoKg;
 	}
 
-	public void setTfCenaPoKg(TextField tfCenaPoKg) {
-		this.tfCenaPoKg = tfCenaPoKg;
-	}
-
 	public Button getBDodaj() {
 		return BDodaj;
 	}
 
-	public void setBDodaj(Button bDodaj) {
-		BDodaj = bDodaj;
-	}
-
 	public Button getBSacuvaj() {
 		return BSacuvaj;
-	}
-
-	public void setBSacuvaj(Button bSacuvaj) {
-		BSacuvaj = bSacuvaj;
 	}
 
 	public Button getBPonisti() {
@@ -761,79 +693,28 @@ public class PrevozTab extends VBox {
 		return BIzmeni;
 	}
 
-	public void setBIzmeni(Button bIzmeni) {
-		BIzmeni = bIzmeni;
-	}
-
 	public Button getBObrisi() {
 		return BObrisi;
-	}
-
-	public void setBObrisi(Button bObrisi) {
-		BObrisi = bObrisi;
 	}
 
 	public TextField getTfPretragaPrevoznika() {
 		return tfPretragaPrevoznika;
 	}
 
-	public void setTfPretragaPrevoznika(TextField tfPretragaPrevoznika) {
-		this.tfPretragaPrevoznika = tfPretragaPrevoznika;
-	}
-
 	public Button getBPonistiPretraguPrevoznika() {
 		return BPonistiPretraguPrevoznika;
-	}
-
-	public void setBPonistiPretraguPrevoznika(Button bPonistiPretraguPrevoznika) {
-		BPonistiPretraguPrevoznika = bPonistiPretraguPrevoznika;
 	}
 
 	public static void setInstance(PrevozTab instance) {
 		PrevozTab.instance = instance;
 	}
 
-	public HBox getZajednickoHB() {
-		return zajednickoHB;
-	}
-
-	public void setZajednickoHB(HBox zajednickoHB) {
-		this.zajednickoHB = zajednickoHB;
-	}
-
-	public VBox getPrevozniciVB() {
-		return prevozniciVB;
-	}
-
-	public void setPrevozniciVB(VBox prevozniciVB) {
-		this.prevozniciVB = prevozniciVB;
-	}
-
-	public VBox getPrevoziVB() {
-		return prevoziVB;
-	}
-
-	public void setPrevoziVB(VBox prevoziVB) {
-		this.prevoziVB = prevoziVB;
-	}
-
 	public TableView<Prevoznik> getTabelaPrevoznika() {
 		return tabelaPrevoznika;
-	}
-
-	public void setTabelaPrevoznika(TableView<Prevoznik> tabelaPrevoznika) {
-		this.tabelaPrevoznika = tabelaPrevoznika;
 	}
 
 	public TableView<Prevoz> getTabelaPrevoza() {
 		return tabelaPrevoza;
 	}
 
-	public void setTabelaPrevoza(TableView<Prevoz> tabelaPrevoza) {
-		this.tabelaPrevoza = tabelaPrevoza;
-	}
-	
-	
-	
-	
 }

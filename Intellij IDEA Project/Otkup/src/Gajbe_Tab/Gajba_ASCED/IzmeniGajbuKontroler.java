@@ -18,7 +18,7 @@ public class IzmeniGajbuKontroler implements EventHandler<ActionEvent> {
 		GajbeTab.getInstance().getTfTezinaGajbe().setText(String.valueOf(g.getTezina()));
 		GajbeTab.getInstance().getTfUkupnoNaRaspolaganjuGajbi().setText(String.valueOf(g.getUkupnoNaRaspolaganju()));
 		
-		GajbeTab.getInstance().getUnosGajbiFP().setDisable(false);     //podesavam prikaz 
+		GajbeTab.getInstance().SetUnosGajbeEnable();     //podesavam prikaz
 		GajbeTab.getInstance().getBObrisiGajbu().setDisable(true);
 		GajbeTab.getInstance().getBSacuvajGajbu().setDisable(false);
 		GajbeTab.getInstance().getBIzmeniGajbu().setDisable(true);

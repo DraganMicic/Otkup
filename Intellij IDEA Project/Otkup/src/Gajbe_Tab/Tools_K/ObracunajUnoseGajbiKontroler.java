@@ -1,5 +1,6 @@
 package Gajbe_Tab.Tools_K;
 
+import Main.Print;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -21,7 +22,10 @@ public class ObracunajUnoseGajbiKontroler implements EventHandler<ActionEvent>{
 				izlaz += ug.getGajbeIzlaz();
 			}
 			saldo = ulaz - izlaz;	
-			String tekst = "UKUPNO \nzaduženih: " + izlaz + "kom\nrazduženih: " + ulaz +"kom\nSALDO: "+ saldo+"kom" ;
+			String tekst = "UKUPNO \nzaduženih: "
+					+ Print.getInstance().getFormatter().format(izlaz) + "kom\nrazduženih: "
+					+ Print.getInstance().getFormatter().format(ulaz) +"kom\nSALDO: "
+					+ Print.getInstance().getFormatter().format(saldo)+"kom" ;
 			Alert a = new Alert(AlertType.INFORMATION, tekst);
 			a.setTitle("Brz obračun");
 			a.setHeaderText("Brz obračun za sve unose gajbi");
@@ -33,7 +37,10 @@ public class ObracunajUnoseGajbiKontroler implements EventHandler<ActionEvent>{
 				izlaz += ug.getGajbeIzlaz();
 			}
 			saldo = ulaz - izlaz;
-			String tekst = "UKUPNO \nzaduženih: " + izlaz + "kom\nrazduženih: " + ulaz +"kom\nSALDO: "+ saldo+"kom" ;
+			String tekst = "UKUPNO \nzaduženih: "
+					+ Print.getInstance().getFormatter().format(izlaz) + "kom\nrazduženih: "
+					+ Print.getInstance().getFormatter().format(ulaz) + "kom\nSALDO: "
+					+ Print.getInstance().getFormatter().format(saldo) + "kom" ;
 			Alert a = new Alert(AlertType.INFORMATION, tekst);
 			a.setTitle("Brz obračun");
 			a.setHeaderText("Brz obračun za filtrirane unose gajbi");

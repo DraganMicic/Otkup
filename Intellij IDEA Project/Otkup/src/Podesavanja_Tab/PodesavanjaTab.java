@@ -5,205 +5,243 @@ import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.print.Printer;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import model.Firma;
 
 public class PodesavanjaTab extends VBox {
 	
 	private static PodesavanjaTab instance;
-	 
-	private VBox podesavanjaVb;
-	
+
+	private HBox unosHb;
+
+	private GridPane podesavanjaGp;
+	private Label lime;
 	private TextField tfIme;
+	private Label ladresa;
 	private TextField tfAdresa;
+	private Label lbrracuna;
 	private TextField tfRacun;
+	private Label lpib;
 	private TextField tfPib;
+	private Label lmaticnibr;
 	private TextField tfMaticniBr;
+	private Label ltelefon1;
 	private TextField tftelefon1;
+	private Label ltelefon2;
 	private TextField tftelefon2;
+	private Label lregbr;
 	private TextField tfRegBr;
+	private Label lpzr;
 	private TextField tfpzr;
-	private TextField tfpzg; 
+	private Label lpzg;
+	private TextField tfpzg;
+	private Label ldirektor;
 	private TextField tfDirektor;
+	private Label lpecat;
 	private TextField tfPecat;
+	private Label lpecatskaliranje;
 	private TextField tfPecatScale;
-	
+	private  Label lbojagore;
+	private ColorPicker cpGornjaBoja;
+	private Label lbojadole;
+	private ColorPicker cpDonjaBoja;
+	private ComboBox<String> cBPosPrinter;
+	private ComboBox<String> cbA4Printer;
+	private  Label lposprinter;
+	private  Label la4printer;
+
 	private Button BIzmeni;
 	private Button BSacuvaj;
 	private Button BOdustani;
-	private ColorPicker cpGornjaBoja;
-	private ColorPicker cpDonjaBoja;
-	
-	private HBox posPrinterHB;
-	private ComboBox<String> cBPosPrinter;
-	
-	private HBox A4PrinterHB;
-	private ComboBox<String> cbA4Printer;
-	
+
+
 	private PodesavanjaTab() {
-		 
+
 		setPadding(new Insets(10,20,10,20));  //podesavam ceo tab
 		setSpacing(15);
+		this.setMinHeight(Screen.getPrimary().getBounds().getHeight()-80);
+
+		//naslov 1
 		Label naslov = new Label("Podešavanja:");
 		naslov.setFont(new Font(35));
-		this.getChildren().add(naslov);
-		
-		dodavanjePolja();
-		trakaKomandi();
-		
-	}
-		
-	private void dodavanjePolja() {
-		
-		podesavanjaVb = new VBox(10);
-		podesavanjaVb.setAlignment(Pos.BASELINE_LEFT);
-		
-		HBox imeHB = new HBox(10);
-		Label ime = new Label("ime preduzeća: ");
-		ime.setPrefWidth(110);
-		tfIme = new TextField();
-		tfIme.setMinWidth(220);
-		imeHB.getChildren().addAll(ime,tfIme);
-		
-		HBox adresaHB = new HBox(10);
-		Label adresa = new Label("adresa: ");
-		adresa.setPrefWidth(110);
-		tfAdresa = new TextField();
-		tfAdresa.setMinWidth(220);
-		adresaHB.getChildren().addAll(adresa,tfAdresa);
-		
-		HBox  tekuciRacunHB = new HBox(10);
-		Label tekuciRacun = new Label("tekući račun: ");
-		tekuciRacun.setPrefWidth(110);
-		tfRacun = new TextField();
-		tfRacun.setMinWidth(220);
-		tekuciRacunHB.getChildren().addAll(tekuciRacun,tfRacun);
-		
-		HBox pivHB = new HBox(10);
-		Label pib = new Label("PIB: ");
-		pib.setPrefWidth(110);
-		tfPib = new TextField();
-		tfPib.setMinWidth(100);
-		pivHB.getChildren().addAll(pib,tfPib);
-		
-		HBox maticniHB = new HBox(10);
-		Label maticni = new Label("matični broj: ");
-		maticni.setPrefWidth(110);
-		tfMaticniBr = new TextField();
-		tfMaticniBr.setMinWidth(100);
-		maticniHB.getChildren().addAll(maticni,tfMaticniBr);
-		
-		HBox tel1Hb = new HBox(10);
-		Label tel1 = new Label("telefon 1: ");
-		tel1.setPrefWidth(110);
-		tftelefon1 = new TextField();
-		tftelefon1.setMinWidth(100);
-		tel1Hb.getChildren().addAll(tel1,tftelefon1);
-		
-		HBox tel2HB = new HBox(10);
-		Label tel2 = new Label("telefon 2: ");
-		tel2.setPrefWidth(110);
-		tftelefon2 = new TextField();
-		tftelefon2.setMinWidth(100);
-		tel2HB.getChildren().addAll(tel2,tftelefon2);
-		
-		HBox regBrHB = new HBox(10);
-		Label regBr = new Label("registarski broj:");
-		regBr.setPrefWidth(110);
-		tfRegBr = new TextField();
-		tfRegBr.setMinWidth(100);
-		regBrHB.getChildren().addAll(regBr,tfRegBr);
-		
-		HBox szrHB = new HBox(10);
-		Label pzr = new Label("saradnik za robu: ");
-		pzr.setPrefWidth(110);
-		tfpzr = new TextField();
-		tfpzr.setMinWidth(220);
-		szrHB.getChildren().addAll(pzr,tfpzr);
-		
-		HBox pzgHB = new HBox(10);
-		Label pzg = new Label("saradnik za gorivo: ");
-		pzg.setPrefWidth(110);
-		tfpzg = new TextField();
-		tfpzg.setMinWidth(220);
-		pzgHB.getChildren().addAll(pzg,tfpzg);
-		
-		HBox direktorHB = new HBox(10);
-		Label direktor = new Label("direktor: ");
-		direktor.setPrefWidth(110);
-		tfDirektor = new TextField();
-		tfDirektor.setMinWidth(100);
-		direktorHB.getChildren().addAll(direktor,tfDirektor);
-		
-		HBox pecatHB = new HBox(10);
-		Label pecat = new Label("pečat (putanja): ");
-		pecat.setPrefWidth(110);
-		tfPecat = new TextField();
-		tfPecat.setMinWidth(220);
-		pecatHB.getChildren().addAll(pecat,tfPecat);
+		Separator separator = new Separator();
+		this.getChildren().addAll(naslov,separator);
 
-		HBox pecatScaleHB = new HBox(10);
-		Label pecatScale = new Label("pečat (skaliranje)");
-		pecatScale.setPrefWidth(110);
-		tfPecatScale = new TextField();
-		tfPecatScale.setMinWidth(100);
-		pecatScaleHB.getChildren().addAll(pecatScale,tfPecatScale);
+		//unos i tabela
+		unosHb = new HBox(20);
+		this.getChildren().add(unosHb);
 
-		
-		HBox bojaGoreHB = new HBox(10);
-		bojaGoreHB.setMinHeight(25);
-		Label bojaGore = new Label("boja pozadine 1: ");
-		bojaGore.setPrefWidth(110);
-		cpGornjaBoja = new ColorPicker();
-		cpGornjaBoja.setPrefWidth(150);
-		bojaGoreHB.getChildren().addAll(bojaGore,cpGornjaBoja);
-		
-		HBox bojaDoleHB = new HBox(10);
-		bojaDoleHB.setMinHeight(25);
-		Label bojaDole = new Label("boja pozadine 2: ");
-		bojaDole.setPrefWidth(110);
-		cpDonjaBoja = new ColorPicker();
-		cpDonjaBoja.setPrefWidth(150);
-		bojaDoleHB.getChildren().addAll(bojaDole,cpDonjaBoja);
-		
-		posPrinterHB = new HBox(10);
-		Label pos = new Label("POS štampač: ");
-		pos.setPrefWidth(110);
-		cBPosPrinter = new ComboBox<String>();
-		posPrinterHB.getChildren().addAll(pos,cBPosPrinter);
+		HBox prazno = new HBox();
+		prazno.setPrefWidth(1300);
+
+		//podesavanja grid panea
+		podesavanjaGp = new GridPane();
+		podesavanjaGp.setPadding(new Insets(10, 10, 10, 10));
+		podesavanjaGp.setVgap(10);
+		podesavanjaGp.setHgap(10);
+		podesavanjaGp.setAlignment(Pos.BASELINE_LEFT);
+		podesavanjaGp.setStyle("-fx-font: 20px \"Serif\";");
+		podesavanjaGp.setMinWidth(690);
+
+		unosHb.getChildren().addAll(podesavanjaGp, prazno);
+		 
+		unos();
+		popuniPolja();
+
+		updateCBA4Printer();
 		updateCBPOSPrinter();
 		
-		A4PrinterHB = new HBox(10);
-		Label a4 = new Label("A4 štampač: ");
-		a4.setPrefWidth(110);
-		cbA4Printer = new ComboBox<String>();
-		A4PrinterHB.getChildren().addAll(a4,cbA4Printer);
-		updateCBA4Printer();
-		
-		
-		podesavanjaVb.getChildren().addAll(imeHB,adresaHB,tekuciRacunHB,pivHB,maticniHB,tel1Hb,tel2HB,regBrHB,szrHB,pzgHB,direktorHB,pecatHB,pecatScaleHB,bojaGoreHB,bojaDoleHB,posPrinterHB, A4PrinterHB);
-		podesavanjaVb.setDisable(true);
-		
-		popuniPolja();
-		
-		this.getChildren().addAll(podesavanjaVb);
-		
 	}
-	
-	public void updateCBPOSPrinter() {
-		posPrinterHB.getChildren().remove(cBPosPrinter);
+
+	private void unos(){
+
+		BSacuvaj = new Button("Sačuvaj");
+		ImageView save = new ImageView(Firma.getInstance().getSaveIco());
+		BSacuvaj.setGraphic(save);
+		BSacuvaj.setPrefWidth(200);
+		BSacuvaj.setOnAction(new SacuvajPodesavanjaKontroler());
+		BSacuvaj.setDisable(true);
+
+		BIzmeni = new Button("Izmeni");
+		ImageView edit = new ImageView(Firma.getInstance().getEditIco());
+		BIzmeni.setGraphic(edit);
+		BIzmeni.setDisable(false);
+		BIzmeni.setPrefWidth(200);
+		BIzmeni.setOnAction(new IzmeniPodesavanjaKontroler());
+
+		BOdustani = new Button("Stop");
+		ImageView cancel = new ImageView(Firma.getInstance().getCloseIco());
+		BOdustani.setGraphic(cancel);
+		BOdustani.setPrefWidth(200);
+		BOdustani.setOnAction(new OdustaniPodesavanjaKOntroler());
+		BOdustani.setDisable(true);
+
+		HBox a = new HBox();
+		HBox b = new HBox();
+		a.setPrefWidth(200);
+		b.setPrefWidth(200);
+		//dodavanje gornjih dugmica
+		podesavanjaGp.add(BSacuvaj,0,0,1,1);
+		podesavanjaGp.add(BIzmeni,1,0,1,1);
+		podesavanjaGp.add(BOdustani,2,0,1,1);
+		podesavanjaGp.add(a,3,0,1,1);
+		podesavanjaGp.add(b,4,0,1,1);
+
+		lime = new Label("Ime firme:");
+		tfIme = new TextField();
+		tfIme.setPrefWidth(620);
+		podesavanjaGp.add(lime,0,2,1,1);
+		podesavanjaGp.add(tfIme,1,2,3,1);
+
+		ladresa = new Label("Adresa:");
+		tfAdresa = new TextField();
+		tfAdresa.setPrefWidth(620);
+		podesavanjaGp.add(ladresa,0,3,1,1);
+		podesavanjaGp.add(tfAdresa,1,3,3,1);
+
+		lbrracuna = new Label("Tekući račun:");
+		tfRacun = new TextField();
+		tfRacun.setPrefWidth(410);
+		podesavanjaGp.add(lbrracuna,0,4,1,1);
+		podesavanjaGp.add(tfRacun,1,4,2,1);
+
+		lpib = new Label("PIB:");
+		tfPib = new TextField();
+		tfPib.setPrefWidth(410);
+		podesavanjaGp.add(lpib,0,5,1,1);
+		podesavanjaGp.add(tfPib,1,5,2,1);
+
+		lmaticnibr = new Label("Matični broj:");
+		tfMaticniBr = new TextField();
+		tfMaticniBr.setPrefWidth(410);
+		podesavanjaGp.add(lmaticnibr,0,6,1,1);
+		podesavanjaGp.add(tfMaticniBr,1,6,2,1);
+
+		ltelefon1 = new Label("Telefon 1:");
+		tftelefon1 = new TextField();
+		tftelefon1.setPrefWidth(410);
+		podesavanjaGp.add(ltelefon1,0,7,1,1);
+		podesavanjaGp.add(tftelefon1,1,7,2,1);
+
+		ltelefon2 = new Label("Telefon 2:");
+		tftelefon2 = new TextField();
+		tftelefon2.setPrefWidth(410);
+		podesavanjaGp.add(ltelefon2,0,8,1,1);
+		podesavanjaGp.add(tftelefon2,1,8,2,1);
+
+		lregbr = new Label("REG br.:");
+		tfRegBr = new TextField();
+		tfRegBr.setPrefWidth(410);
+		podesavanjaGp.add(lregbr,0,9,1,1);
+		podesavanjaGp.add(tfRegBr,1,9,2,1);
+
+		ldirektor = new Label("Direktor:");
+		tfDirektor = new TextField();
+		tfDirektor.setPrefWidth(410);
+		podesavanjaGp.add(ldirektor,0,10,1,1);
+		podesavanjaGp.add(tfDirektor,1,10,2,1);
+
+		lpzr = new Label("Saradnk za robu:");
+		tfpzr = new TextField();
+		tfpzr.setPrefWidth(620);
+		podesavanjaGp.add(lpzr,0,11,2,1);
+		podesavanjaGp.add(tfpzr,2,11,3,1);
+
+		lpzg = new Label("Saradnik za gorivo:");
+		tfpzg = new TextField();
+		tfpzg.setPrefWidth(620);
+		podesavanjaGp.add(lpzg,0,12,2,1);
+		podesavanjaGp.add(tfpzg,2,12,3,1);
+
+
+		lpecat = new Label("Pečat (putanja do slike):");
+		tfPecat = new TextField();
+		tfPecat.setPrefWidth(410);
+		podesavanjaGp.add(lpecat,0,13,2,1);
+		podesavanjaGp.add(tfPecat,2,13,3,1);
+
+		lpecatskaliranje = new Label("Pečat(skaliranje slike):");
+		tfPecatScale = new TextField();
+		tfPecatScale.setPrefWidth(200);
+		podesavanjaGp.add(lpecatskaliranje,0,14,2,1);
+		podesavanjaGp.add(tfPecatScale,2,14,1,1);
+
+		lbojagore = new Label("Boja 1:");
+		cpGornjaBoja = new ColorPicker();
+		cpGornjaBoja.setPrefWidth(410);
+		podesavanjaGp.add(lbojagore,0,15,1,1);
+		podesavanjaGp.add(cpGornjaBoja,1,15,2,1);
+
+		lbojadole = new Label("Boja 2:");
+		cpDonjaBoja = new ColorPicker();
+		cpDonjaBoja.setPrefWidth(410);
+		podesavanjaGp.add(lbojadole,0,16,1,1);
+		podesavanjaGp.add(cpDonjaBoja,1,16,2,1);
+
+		lposprinter = new Label("POS štampač:");
 		cBPosPrinter = new ComboBox<String>();
-		cBPosPrinter.setPrefWidth(220);
-		posPrinterHB.getChildren().add(cBPosPrinter);
+		cBPosPrinter.setPrefWidth(620);
+		podesavanjaGp.add(lposprinter,0,17,1,1);
+		podesavanjaGp.add(cBPosPrinter,1,17,3,1);
+
+		la4printer = new Label("A4 štampač:");
+		cbA4Printer = new ComboBox<String>();
+		cbA4Printer.setPrefWidth(620);
+		podesavanjaGp.add(la4printer,0,18,1,1);
+		podesavanjaGp.add(cbA4Printer,1,18,3,1);
+
+		SetEditDisable();
+	}
+
+	public void updateCBPOSPrinter() {
+
+		cBPosPrinter.getItems().clear();
 		ArrayList<String> stampaci = new ArrayList<String>();
 		for (Printer p : Printer.getAllPrinters()) {
 			stampaci.add(p.getName());
@@ -213,10 +251,8 @@ public class PodesavanjaTab extends VBox {
 	}
 	
 	public void updateCBA4Printer() {
-		A4PrinterHB.getChildren().remove(cbA4Printer);
-		cbA4Printer = new ComboBox<String>();
-		cbA4Printer.setPrefWidth(220);
-		A4PrinterHB.getChildren().add(cbA4Printer);
+
+		cbA4Printer.getItems().clear();
 		ArrayList<String> stampaci = new ArrayList<String>();
 		for (Printer p : Printer.getAllPrinters()) {
 			stampaci.add(p.getName());
@@ -225,34 +261,7 @@ public class PodesavanjaTab extends VBox {
 		cbA4Printer.setValue(Firma.getInstance().getA4StampacNaziv());
 
 	}
-	
-	private void trakaKomandi() {
-		
-		HBox komandeHB = new HBox(10);
-		komandeHB.setAlignment(Pos.BASELINE_LEFT);
-		
-		BSacuvaj = new Button("sačuvaj");
-		ImageView save = new ImageView(Firma.getInstance().getSaveIco());
-		BSacuvaj.setGraphic(save);
-		BSacuvaj.setOnAction(new SacuvajPodesavanjaKontroler());
-		BSacuvaj.setDisable(true);
-		
-		BIzmeni = new Button("izmeni");
-		ImageView edit = new ImageView(Firma.getInstance().getEditIco());
-		BIzmeni.setGraphic(edit);
-		BIzmeni.setDisable(false);
-		BIzmeni.setOnAction(new IzmeniPodesavanjaKontroler());
-		
-		BOdustani = new Button("odustani");
-		ImageView cancel = new ImageView(Firma.getInstance().getCloseIco());
-		BOdustani.setGraphic(cancel);
-		BOdustani.setOnAction(new OdustaniPodesavanjaKOntroler());
-		BOdustani.setDisable(true);
-		
-		komandeHB.getChildren().addAll(BIzmeni,BOdustani,BSacuvaj);
-		this.getChildren().add(komandeHB);
-	}
-	
+
 	public void popuniPolja() {
 		
 		tfIme.setText(Firma.getInstance().getIme());
@@ -276,6 +285,100 @@ public class PodesavanjaTab extends VBox {
 		tfPecatScale.setText(String.valueOf(Firma.getInstance().getPecatScale()));
 		
 	}
+
+	public void  SetEditEnable(){
+
+		lime.setDisable(false);
+		tfIme.setDisable(false);
+		ladresa.setDisable(false);
+		tfAdresa.setDisable(false);
+		lbrracuna.setDisable(false);
+		tfRacun.setDisable(false);
+		lpib.setDisable(false);
+		tfPib.setDisable(false);
+		lmaticnibr.setDisable(false);
+		tfMaticniBr.setDisable(false);
+		ltelefon1.setDisable(false);
+		tftelefon1.setDisable(false);
+		ltelefon2.setDisable(false);
+		tftelefon2.setDisable(false);
+		lregbr.setDisable(false);
+		tfRegBr.setDisable(false);
+		lpzr.setDisable(false);
+		tfpzr.setDisable(false);
+		lpzg.setDisable(false);
+		tfpzg.setDisable(false);
+		ldirektor.setDisable(false);
+		tfDirektor.setDisable(false);
+		lpecat.setDisable(false);
+		tfPecat.setDisable(false);
+		lpecatskaliranje.setDisable(false);
+		tfPecatScale.setDisable(false);
+		lbojadole.setDisable(false);
+		lbojagore.setDisable(false);
+		lposprinter.setDisable(false);
+		la4printer.setDisable(false);
+		cpDonjaBoja.setDisable(false);
+		cpGornjaBoja.setDisable(false);
+		cbA4Printer.setDisable(false);
+		cBPosPrinter.setDisable(false);
+
+	}
+
+	public void  SetEditDisable() {
+
+		lime.setDisable(true);
+		tfIme.setDisable(true);
+		ladresa.setDisable(true);
+		tfAdresa.setDisable(true);
+		lbrracuna.setDisable(true);
+		tfRacun.setDisable(true);
+		lpib.setDisable(true);
+		tfPib.setDisable(true);
+		lmaticnibr.setDisable(true);
+		tfMaticniBr.setDisable(true);
+		ltelefon1.setDisable(true);
+		tftelefon1.setDisable(true);
+		ltelefon2.setDisable(true);
+		tftelefon2.setDisable(true);
+		lregbr.setDisable(true);
+		tfRegBr.setDisable(true);
+		lpzr.setDisable(true);
+		tfpzr.setDisable(true);
+		lpzg.setDisable(true);
+		tfpzg.setDisable(true);
+		ldirektor.setDisable(true);
+		tfDirektor.setDisable(true);
+		lpecat.setDisable(true);
+		tfPecat.setDisable(true);
+		lpecatskaliranje.setDisable(true);
+		tfPecatScale.setDisable(true);
+		lbojadole.setDisable(true);
+		lbojagore.setDisable(true);
+		lposprinter.setDisable(true);
+		la4printer.setDisable(true);
+		cpDonjaBoja.setDisable(true);
+		cpGornjaBoja.setDisable(true);
+		cbA4Printer.setDisable(true);
+		cBPosPrinter.setDisable(true);
+	}
+
+	public void  setColor(String gore, String dole){
+
+		LinearGradient gradient = new LinearGradient(
+				0, 0, 0, 1, true, javafx.scene.paint.CycleMethod.NO_CYCLE,
+				new javafx.scene.paint.Stop(0, Color.web(gore)),
+				new javafx.scene.paint.Stop(1, Color.web(dole))
+		);
+
+		// Creating a BackgroundFill with the linear gradient
+		BackgroundFill backgroundFill = new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY);
+
+		// Creating a Background with the BackgroundFill
+		Background background = new Background(backgroundFill);
+
+		this.setBackground(background);
+	}
 	
 	public static PodesavanjaTab getInstance() {  //get instance 
 		if (instance == null) {
@@ -284,180 +387,81 @@ public class PodesavanjaTab extends VBox {
 		return instance;
 	}
 
-	public VBox getPodesavanjaVb() {
-		return podesavanjaVb;
-	}
-
-	public void setPodesavanjaVb(VBox podesavanjaVb) {
-		this.podesavanjaVb = podesavanjaVb;
-	}
-
 	public TextField getTfIme() {
 		return tfIme;
-	}
-
-	public void setTfIme(TextField tfIme) {
-		this.tfIme = tfIme;
 	}
 
 	public TextField getTfAdresa() {
 		return tfAdresa;
 	}
 
-	public void setTfAdresa(TextField tfAdresa) {
-		this.tfAdresa = tfAdresa;
-	}
-
 	public TextField getTfRacun() {
 		return tfRacun;
 	}
 
-	public void setTfRacun(TextField tfRacun) {
-		this.tfRacun = tfRacun;
-	}
-
 	public TextField getTfPib() {
 		return tfPib;
-	}
-	
-	public HBox getA4PrinterHB() {
-		return A4PrinterHB;
-	}
-
-	public void setA4PrinterHB(HBox a4PrinterHB) {
-		A4PrinterHB = a4PrinterHB;
 	}
 
 	public ComboBox<String> getCbA4Printer() {
 		return cbA4Printer;
 	}
 
-	public void setCbA4Printer(ComboBox<String> cbA4Printer) {
-		this.cbA4Printer = cbA4Printer;
-	}
-
-	public void setTfPib(TextField tfPib) {
-		this.tfPib = tfPib;
-	}
-	
 	public ColorPicker getCpGornjaBoja() {
 		return cpGornjaBoja;
-	}
-
-	public void setCpGornjaBoja(ColorPicker cpGornjaBoja) {
-		this.cpGornjaBoja = cpGornjaBoja;
 	}
 
 	public ColorPicker getCpDonjaBoja() {
 		return cpDonjaBoja;
 	}
 
-	public void setCpDonjaBoja(ColorPicker cpDonjaBoja) {
-		this.cpDonjaBoja = cpDonjaBoja;
-	}
-
 	public TextField getTfMaticniBr() {
 		return tfMaticniBr;
-	}
-
-	public void setTfMaticniBr(TextField tfMaticniBr) {
-		this.tfMaticniBr = tfMaticniBr;
 	}
 
 	public TextField getTftelefon1() {
 		return tftelefon1;
 	}
 
-	public HBox getPosPrinterHB() {
-		return posPrinterHB;
-	}
-
-	public void setPosPrinterHB(HBox posPrinterHB) {
-		this.posPrinterHB = posPrinterHB;
-	}
 
 	public ComboBox<String> getcBPosPrinter() {
 		return cBPosPrinter;
-	}
-
-	public void setcBPosPrinter(ComboBox<String> cBPosPrinter) {
-		this.cBPosPrinter = cBPosPrinter;
-	}
-
-	public void setTftelefon1(TextField tftelefon1) {
-		this.tftelefon1 = tftelefon1;
 	}
 
 	public TextField getTftelefon2() {
 		return tftelefon2;
 	}
 
-	public void setTftelefon2(TextField tftelefon2) {
-		this.tftelefon2 = tftelefon2;
-	}
-
 	public TextField getTfRegBr() {
 		return tfRegBr;
-	}
-
-	public void setTfRegBr(TextField tfRegBr) {
-		this.tfRegBr = tfRegBr;
 	}
 
 	public TextField getTfpzr() {
 		return tfpzr;
 	}
 
-	public void setTfpzr(TextField tfpzr) {
-		this.tfpzr = tfpzr;
-	}
-
 	public TextField getTfpzg() {
 		return tfpzg;
-	}
-
-	public void setTfpzg(TextField tfpzg) {
-		this.tfpzg = tfpzg;
 	}
 
 	public TextField getTfDirektor() {
 		return tfDirektor;
 	}
 
-	public void setTfDirektor(TextField tfDirektor) {
-		this.tfDirektor = tfDirektor;
-	}
-
 	public TextField getTfPecat() {
 		return tfPecat;
-	}
-
-	public void setTfPecat(TextField tfPecat) {
-		this.tfPecat = tfPecat;
 	}
 
 	public Button getBIzmeni() {
 		return BIzmeni;
 	}
 
-	public void setBIzmeni(Button bIzmeni) {
-		BIzmeni = bIzmeni;
-	}
-
 	public Button getBSacuvaj() {
 		return BSacuvaj;
 	}
 
-	public void setBSacuvaj(Button bSacuvaj) {
-		BSacuvaj = bSacuvaj;
-	}
-
 	public Button getBOdustani() {
 		return BOdustani;
-	}
-
-	public void setBOdustani(Button bOdustani) {
-		BOdustani = bOdustani;
 	}
 
 	public static void setInstance(PodesavanjaTab instance) {

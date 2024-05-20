@@ -1,30 +1,22 @@
 package BazaIzlaza_Tab;
 
-import BazaIzlaza_Tab.Izlaz_ASCED.DodajKontroler;
-import BazaIzlaza_Tab.Izlaz_ASCED.IzmeniKontroler;
-import BazaIzlaza_Tab.Izlaz_ASCED.ObrisiKontroler;
-import BazaIzlaza_Tab.Izlaz_ASCED.PonistiKontroler;
-import BazaIzlaza_Tab.Izlaz_ASCED.SacuvajKontroler;
+import BazaIzlaza_Tab.Izlaz_ASCED.*;
 import BazaIzlaza_Tab.Tools_K.PonistiPretragu_izlaz_K;
 import BazaIzlaza_Tab.Tools_K.StampaSpiska_Izlaz_K;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import model.Firma;
 import model.Izlaz;
 import model.JedinicaMere;
@@ -35,25 +27,33 @@ public class BazaIzlazaTab extends VBox {
 	
 	private boolean unosNovog=false;
 	private boolean izmenaUToku = false;
+
+	private HBox unosITabelaHb;
 	
-	private HBox unosHB;					 //inicijalizujem komponente
+	private GridPane unosGp;					 //inicijalizujem komponente
+	private Label lsifra;
 	private TextField tfSifra;
+	private Label lnaziv;
 	private TextField tfNaziv;
+	private Label lopis;
 	private TextField tfOpis;
+	private Label lcenapokom;
 	private TextField tfCenaPoKom;
+	private Label ljedmere;
 	private ComboBox<JedinicaMere> cbJedMere;
-	
 	private Button BDodaj;
 	private Button BSacuvaj;
 	private Button BPonisti;
 	private Button BIzmeni;
 	private Button BObrisi;
-	
+
 	private TableView<Izlaz> tabela;
-	
+
+	private HBox pretragaHB;
 	private TextField tfPretraga;
 	private Button BPonistiPretragu;
-	
+
+	private HBox spisak;
 	private Button BSrampajSpisak;
 	private RadioButton RBSviSpisak;
 	private RadioButton RBFiltriraniSpisak;
@@ -66,98 +66,149 @@ public class BazaIzlazaTab extends VBox {
 
 		setPadding(new Insets(10,20,10,20));  //podesavam ceo tab
 		setSpacing(15);
-		Label naslov = new Label("Baza Izlaza:");
+		this.setMinHeight(Screen.getPrimary().getBounds().getHeight()-80);
+
+		//naslov 1
+		Label naslov = new Label("Baza izlaza (akontacija):");
 		naslov.setFont(new Font(35));
-		this.getChildren().add(naslov);
-		
-		trakZaUnos();
-		trakaKomandi();
+		Separator separator = new Separator();
+		this.getChildren().addAll(naslov,separator);
+
+		//unos i tabela
+		unosITabelaHb = new HBox(20);
+		this.getChildren().add(unosITabelaHb);
+
+		//podesavanja grid panea
+		unosGp = new GridPane();
+		unosGp.setPadding(new Insets(10, 10, 10, 10));
+		unosGp.setVgap(10);
+		unosGp.setHgap(10);
+		unosGp.setAlignment(Pos.BASELINE_LEFT);
+		unosGp.setStyle("-fx-font: 20px \"Serif\";");
+		unosGp.setMinWidth(690);
+
+		unos();
 		tabela();
+		tabela.setPrefWidth(1300);
+		tabela.setPrefHeight(530);
+
+		Separator separator2 = new Separator();
+		separator2.setOrientation(Orientation.VERTICAL);
+		unosITabelaHb.getChildren().addAll(unosGp,separator2,tabela);
+
+		//naslov2
+		Label naslov2 = new Label("Alati:");
+		naslov2.setFont(new Font(35));
+		Separator separator1 = new Separator();
+		this.getChildren().addAll(naslov2,separator1);
+
+		//alati
 		filtriranje();
 		stampaSpisak();
+		this.getChildren().addAll(pretragaHB,spisak);
+
+		//pocetni update
+
+		getBDodaj().requestFocus();
 	}
-	
-	private void trakZaUnos() {
-		
+
+	private void unos(){
+		//DUGMICI///////////////////////////////////////////////////////////////////////////////
+		BDodaj = new Button("Dodaj");
+		ImageView add = new ImageView(Firma.getInstance().getAddIco());
+		BDodaj.setGraphic(add);
+		BDodaj.setPrefWidth(200);
+		BDodaj.setOnAction(new DodajKontroler());
+
+		BSacuvaj = new Button("Sačuvaj");
+		ImageView save = new ImageView(Firma.getInstance().getSaveIco());
+		BSacuvaj.setGraphic(save);
+		BSacuvaj.setPrefWidth(200);
+		BSacuvaj.setOnAction(new SacuvajKontroler());
+		BSacuvaj.setDisable(true);
+
+		BPonisti = new Button("Stop");
+		ImageView cancel = new ImageView(Firma.getInstance().getCloseIco());
+		BPonisti.setGraphic(cancel);
+		BPonisti.setPrefWidth(200);
+		BPonisti.setOnAction(new PonistiKontroler());
+		BPonisti.setDisable(true);
+
+		BIzmeni = new Button("Izmeni");
+		ImageView edit = new ImageView(Firma.getInstance().getEditIco());
+		BIzmeni.setGraphic(edit);
+		BIzmeni.setPrefWidth(200);
+		BIzmeni.setOnAction(new IzmeniKontroler());
+		BIzmeni.setDisable(true);
+
+		BObrisi = new Button("Obriši");
+		ImageView delete = new ImageView(Firma.getInstance().getDeleteIco());
+		BObrisi.setGraphic(delete);
+		BObrisi.setPrefWidth(200);
+		BObrisi.setOnAction(new ObrisiKontroler());
+		BObrisi.setDisable(true);
+
+		//dodavanje gornjih dugmica
+		unosGp.add(BDodaj,0,0,1,1);
+		unosGp.add(BSacuvaj,1,0,1,1);
+		unosGp.add(BPonisti,2,0,1,1);
+		unosGp.add(BIzmeni,3,0,1,1);
+		unosGp.add(BObrisi,4,0,1,1);
+
 		tfSifra = new TextField();
-		tfSifra.setPrefWidth(40);
+		tfSifra.setPrefWidth(200);
+
 		tfNaziv = new TextField();
-		tfNaziv.setPrefWidth(180);
+		tfNaziv.setPrefWidth(410);
+
 		tfOpis = new TextField();
-		tfOpis.setPrefWidth(220);				
-		cbJedMere = new ComboBox<JedinicaMere>();			
-		cbJedMere.getItems().addAll(Firma.getInstance().getJediniceMere());			
-		tfCenaPoKom = new TextField();
-		tfCenaPoKom.setPrefWidth(80);
-				
-		unosHB = new HBox(10);
-		unosHB.setAlignment(Pos.BASELINE_LEFT);
-			
-		unosHB.getChildren().add(new Label("šifra:"));
-		unosHB.getChildren().add(tfSifra);
-		unosHB.getChildren().add(new Label("naziv:"));
-		unosHB.getChildren().add(tfNaziv);
-		unosHB.getChildren().add(new Label("opis:"));
-		unosHB.getChildren().add(tfOpis);	
-		unosHB.getChildren().add(new Label("jedinica mere:"));
-		unosHB.getChildren().add(cbJedMere);
-		Label ljm = new Label("cena po jedinici mere (din):");
-		unosHB.getChildren().add(ljm);
-		unosHB.getChildren().add(tfCenaPoKom);
-		
+		tfOpis.setPrefWidth(410);
+
+		cbJedMere = new ComboBox<JedinicaMere>();
+		cbJedMere.getItems().addAll(Firma.getInstance().getJediniceMere());
+		cbJedMere.setPrefWidth(200);
 		cbJedMere.valueProperty().addListener(new ChangeListener<JedinicaMere>() {
 			@Override
 			public void changed(ObservableValue<? extends JedinicaMere> observable, JedinicaMere oldValue, JedinicaMere newValue) {
 				if(newValue != null && newValue.toString().equals("din")) {
 					tfCenaPoKom.setDisable(true);
-					ljm.setDisable(true);
+					lcenapokom.setDisable(true);
+					tfCenaPoKom.setPromptText("");
 				}else {
 					tfCenaPoKom.setDisable(false);
-					ljm.setDisable(false);
+					lcenapokom.setDisable(false);
+					tfCenaPoKom.setPromptText("[din]");
 				}
-				
+
 			}
 		});
-				
-		getChildren().add(unosHB);
-		
-		unosHB.setDisable(true);		
-	}
-	
-	private void trakaKomandi(){
-		BDodaj = new Button("dodaj");
-		ImageView add = new ImageView(Firma.getInstance().getAddIco());
-		BDodaj.setGraphic(add); 
-		BDodaj.setOnAction(new DodajKontroler());
-		
-		BSacuvaj = new Button("sačuvaj");
-		ImageView save = new ImageView(Firma.getInstance().getSaveIco());
-		BSacuvaj.setGraphic(save);
-		BSacuvaj.setOnAction(new SacuvajKontroler());
-		BSacuvaj.setDisable(true);
-		
-		BPonisti = new Button("odustani");
-		ImageView cancel = new ImageView(Firma.getInstance().getCloseIco());
-		BPonisti.setGraphic(cancel);
-		BPonisti.setOnAction(new PonistiKontroler());
-		BPonisti.setDisable(true);
-			
-		BIzmeni = new Button("izmeni");
-		ImageView edit = new ImageView(Firma.getInstance().getEditIco());
-		BIzmeni.setGraphic(edit);
-		BIzmeni.setDisable(true);
-		BIzmeni.setOnAction(new IzmeniKontroler());
-		
-		BObrisi = new Button("obriši");
-		ImageView delete = new ImageView(Firma.getInstance().getDeleteIco());
-		BObrisi.setGraphic(delete);
-		BObrisi.setDisable(true);
-		BObrisi.setOnAction(new ObrisiKontroler());
-		
-		HBox komandeHB = new HBox(10);
-		komandeHB.getChildren().addAll(BDodaj,BSacuvaj,BPonisti,BIzmeni,BObrisi);
-		getChildren().add(komandeHB);
-		
+
+		tfCenaPoKom = new TextField();
+		tfCenaPoKom.setPrefWidth(200);
+		tfCenaPoKom.setPromptText("[din]");
+
+		lsifra = new Label("Šifra:");
+		unosGp.add(lsifra,0,2,1,1);
+		unosGp.add(tfSifra,1,2,1,1);
+
+		lnaziv = new Label("Naziv:");
+		unosGp.add(lnaziv,0,3,1,1);
+		unosGp.add(tfNaziv,1,3,2,1);
+
+		lopis = new Label("Opis:");
+		unosGp.add(lopis,0,4,1,1);
+		unosGp.add(tfOpis,1,4,2,1);
+
+		ljedmere = new Label("Jed. mere:");
+		unosGp.add(ljedmere,0,5,1,1);
+		unosGp.add(cbJedMere,1,5,1,1);
+
+		lcenapokom = new Label("Cena po jedinici mere:");
+		unosGp.add(lcenapokom,0,6,2,1);
+		unosGp.add(tfCenaPoKom,2,6,1,1);
+
+		SetUnosDisable();
+
 	}
 	
 	@SuppressWarnings({ "unchecked" })
@@ -184,8 +235,6 @@ public class BazaIzlazaTab extends VBox {
 		
 		updateTabele();
 		
-		getChildren().add(tabela);		
-		
 		tabela.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {  //kad se selektuje nesto u tabeli da se updatuju dugmici
 		    if (newSelection != null && unosNovog == false && izmenaUToku == false) {
 		       BObrisi.setDisable(false);
@@ -200,22 +249,25 @@ public class BazaIzlazaTab extends VBox {
 	}
 	
 	private void filtriranje() {
-		HBox pretragaHB = new HBox(10);
+
+		pretragaHB = new HBox(10);
+		pretragaHB.setStyle("-fx-font: 17px \"Serif\";");
 		pretragaHB.setAlignment(Pos.BASELINE_LEFT);
 		ImageView search = new ImageView(Firma.getInstance().getSearchIco());
 		pretragaHB.getChildren().add(search);
 		Label pl = new Label("Pretraga/filtriranje:  ");
-		pl.setFont(new Font(20));
+		pl.setStyle("-fx-font: 25px \"System\";");
 		pretragaHB.getChildren().add(pl);
 		pretragaHB.getChildren().add(new Label("naziv/opis:"));
 		tfPretraga = new TextField();
 		tfPretraga.setPrefWidth(150);
 		pretragaHB.getChildren().add(tfPretraga);
 		ImageView close = new ImageView(Firma.getInstance().getCloseIco());
-		BPonistiPretragu = new Button("poništi");
+		BPonistiPretragu = new Button("Poništi");
 		BPonistiPretragu.setGraphic(close);
 		BPonistiPretragu.setOnAction(new PonistiPretragu_izlaz_K());
 		BPonistiPretragu.setDisable(true);
+		BPonistiPretragu.setPrefWidth(110);
 		pretragaHB.getChildren().add(BPonistiPretragu);
 		
 		tfPretraga.textProperty().addListener(new ChangeListener<String>() {
@@ -230,20 +282,20 @@ public class BazaIzlazaTab extends VBox {
 				}
 			}
 		});
-		
-		getChildren().add(pretragaHB);
+
 	}
 	
 	private void stampaSpisak() {
-		HBox spisak = new HBox(10);                       ///stampa spiska//////////
+
+		spisak = new HBox(10);                       ///stampa spiska//////////
+		spisak.setStyle("-fx-font: 17px \"Serif\";");
 		spisak.setAlignment(Pos.BASELINE_LEFT);
 		ImageView lista = new ImageView(Firma.getInstance().getLisaIco());
 		spisak.getChildren().add(lista);
 		Label sl = new Label("Štampa spiska ulaza:   ");
-		sl.setFont(new Font(20));
+		sl.setStyle("-fx-font: 25px \"System\";");
 		spisak.getChildren().add(sl);
 		Label kkk = new Label("Uvrsti:  ");
-		kkk.setFont(new Font(15));
 		spisak.getChildren().add(kkk);
 		RBSviSpisak = new RadioButton("sve");
 		RBFiltriraniSpisak = new RadioButton("filtrirane");
@@ -252,27 +304,75 @@ public class BazaIzlazaTab extends VBox {
 		RBSviSpisak.setToggleGroup(TGSpisak);
 		RBFiltriraniSpisak.setToggleGroup(TGSpisak);
 		spisak.getChildren().addAll(RBSviSpisak,RBFiltriraniSpisak);
-		BSrampajSpisak = new Button("štampaj");
+		BSrampajSpisak = new Button("Štampaj");
 		ImageView ss = new ImageView(Firma.getInstance().getPrintIco());
 		BSrampajSpisak.setGraphic(ss);
+		BSrampajSpisak.setPrefWidth(110);
 		spisak.getChildren().add(BSrampajSpisak);
 		BSrampajSpisak.setOnAction(new StampaSpiska_Izlaz_K());
-		getChildren().add(spisak);		
+
 	}
 	
-	public void updateTabele () {   				//dodaje djuture u tabelu kao observabl listu
+	public void updateTabele () {//dodaje djuture u tabelu kao observabl listu
+
 		tabela.getItems().clear();
 		tabela.getItems().addAll(FXCollections.observableList(Firma.getInstance().getTrenutnaGodina().getIzlazi()));
 		tabela.scrollTo(tabela.getItems().size()-1);
 	}
 	
-	public void ocistiPoljaZaUnos() {   //cisti sva polja za unos	
+	public void ocistiPoljaZaUnos() {   //cisti sva polja za unos
+
 		tfSifra.clear();
 		tfNaziv.clear();
 		tfOpis.clear();
 		tfCenaPoKom.clear();
 		cbJedMere.getSelectionModel().clearSelection();
 
+	}
+
+	public void SetUnosDisable(){
+
+		lsifra.setDisable(true);
+		tfSifra.setDisable(true);
+		lnaziv.setDisable(true);
+		tfNaziv.setDisable(true);
+		lopis.setDisable(true);
+		tfOpis.setDisable(true);
+		lcenapokom.setDisable(true);
+		tfCenaPoKom.setDisable(true);
+		ljedmere.setDisable(true);
+		cbJedMere.setDisable(true);
+	}
+
+	public void SetUnosEnable(){
+
+		lsifra.setDisable(false);
+		tfSifra.setDisable(false);
+		lnaziv.setDisable(false);
+		tfNaziv.setDisable(false);
+		lopis.setDisable(false);
+		tfOpis.setDisable(false);
+		lcenapokom.setDisable(false);
+		tfCenaPoKom.setDisable(false);
+		ljedmere.setDisable(false);
+		cbJedMere.setDisable(false);
+	}
+
+	public void  setColor(String gore, String dole){
+
+		LinearGradient gradient = new LinearGradient(
+				0, 0, 0, 1, true, javafx.scene.paint.CycleMethod.NO_CYCLE,
+				new javafx.scene.paint.Stop(0, Color.web(gore)),
+				new javafx.scene.paint.Stop(1, Color.web(dole))
+		);
+
+		// Creating a BackgroundFill with the linear gradient
+		BackgroundFill backgroundFill = new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY);
+
+		// Creating a Background with the BackgroundFill
+		Background background = new Background(backgroundFill);
+
+		this.setBackground(background);
 	}
 	
 	public static BazaIzlazaTab getInstance() {
@@ -298,68 +398,32 @@ public class BazaIzlazaTab extends VBox {
 		this.izmenaUToku = izmenaUToku;
 	}
 
-	public HBox getUnosHB() {
-		return unosHB;
-	}
-
-	public void setUnosHB(HBox unosHB) {
-		this.unosHB = unosHB;
-	}
-
 	public TextField getTfSifra() {
 		return tfSifra;
-	}
-
-	public void setTfSifra(TextField tfSifra) {
-		this.tfSifra = tfSifra;
 	}
 
 	public TextField getTfNaziv() {
 		return tfNaziv;
 	}
 
-	public void setTfNaziv(TextField tfNaziv) {
-		this.tfNaziv = tfNaziv;
-	}
-
 	public TextField getTfOpis() {
 		return tfOpis;
-	}
-
-	public void setTfOpis(TextField tfOpis) {
-		this.tfOpis = tfOpis;
 	}
 
 	public TextField getTfCenaPoKom() {
 		return tfCenaPoKom;
 	}
 
-	public void setTfCenaPoKom(TextField tfCenaPoKom) {
-		this.tfCenaPoKom = tfCenaPoKom;
-	}
-
 	public ComboBox<JedinicaMere> getCbJedMere() {
 		return cbJedMere;
-	}
-
-	public void setCbJedMere(ComboBox<JedinicaMere> cbJedMere) {
-		this.cbJedMere = cbJedMere;
 	}
 
 	public Button getBDodaj() {
 		return BDodaj;
 	}
 
-	public void setBDodaj(Button bDodaj) {
-		BDodaj = bDodaj;
-	}
-
 	public Button getBSacuvaj() {
 		return BSacuvaj;
-	}
-
-	public void setBSacuvaj(Button bSacuvaj) {
-		BSacuvaj = bSacuvaj;
 	}
 
 	public Button getBPonisti() {
@@ -374,16 +438,8 @@ public class BazaIzlazaTab extends VBox {
 		return BIzmeni;
 	}
 
-	public void setBIzmeni(Button bIzmeni) {
-		BIzmeni = bIzmeni;
-	}
-
 	public Button getBObrisi() {
 		return BObrisi;
-	}
-
-	public void setBObrisi(Button bObrisi) {
-		BObrisi = bObrisi;
 	}
 
 	public TableView<Izlaz> getTabela() {
@@ -402,51 +458,16 @@ public class BazaIzlazaTab extends VBox {
 		return tfPretraga;
 	}
 
-	public void setTfPretraga(TextField tfPretraga) {
-		this.tfPretraga = tfPretraga;
-	}
-
 	public Button getBPonistiPretragu() {
 		return BPonistiPretragu;
-	}
-
-	public void setBPonistiPretragu(Button bPonistiPretragu) {
-		BPonistiPretragu = bPonistiPretragu;
-	}
-
-	public Button getBSrampajSpisak() {
-		return BSrampajSpisak;
-	}
-
-	public void setBSrampajSpisak(Button bSrampajSpisak) {
-		BSrampajSpisak = bSrampajSpisak;
 	}
 
 	public RadioButton getRBSviSpisak() {
 		return RBSviSpisak;
 	}
 
-	public void setRBSviSpisak(RadioButton rBSviSpisak) {
-		RBSviSpisak = rBSviSpisak;
-	}
-
 	public RadioButton getRBFiltriraniSpisak() {
 		return RBFiltriraniSpisak;
 	}
 
-	public void setRBFiltriraniSpisak(RadioButton rBFiltriraniSpisak) {
-		RBFiltriraniSpisak = rBFiltriraniSpisak;
-	}
-
-	public Button getBStampajSpisak() {
-		return BStampajSpisak;
-	}
-
-	public void setBStampajSpisak(Button bStampajSpisak) {
-		BStampajSpisak = bStampajSpisak;
-	}
-	
-	
-	
-	
 }

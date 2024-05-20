@@ -15,12 +15,12 @@ public class StampaIzvestaja_K implements EventHandler<ActionEvent>{
 
 	@Override
 	public void handle(ActionEvent event) {
-		if(ProizvodjaciTab.getInstance().getTabela().getSelectionModel().isEmpty()) {
+		if(ProizvodjaciTab.getInstance().getCbProizvodjacStampaSvega().getValue()==null) {
 			Alert a = new Alert(AlertType.ERROR, "Proizvodjač nije selektovan");
 			a.show();
 			return;	
 		}
-		Proizvodjac p = ProizvodjaciTab.getInstance().getTabela().getSelectionModel().getSelectedItem();
+		Proizvodjac p = ProizvodjaciTab.getInstance().getCbProizvodjacStampaSvega().getSelectionModel().getSelectedItem();
 		
 		
 		if(ProizvodjaciTab.getInstance().getRBizvestajProizvodjaca().isSelected())
@@ -34,6 +34,9 @@ public class StampaIzvestaja_K implements EventHandler<ActionEvent>{
 		
 		if(ProizvodjaciTab.getInstance().getRBugovor().isSelected())
 			PrintUgovor.getInstance().stampajUgovor(p);
+
+		ProizvodjaciTab.getInstance().getCbProizvodjacStampaSvega().getSelectionModel().clearSelection();
+		ProizvodjaciTab.getInstance().getCbProizvodjacStampaSvega().requestFocus();
 
 		PonistiKontroler po = new PonistiKontroler();
 		po.handle(event);

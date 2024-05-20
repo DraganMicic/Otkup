@@ -13,7 +13,7 @@ public class PonistiUnosGajbiKontroler implements EventHandler<ActionEvent> {
 		GajbeTab.getInstance().setUnosUnosaGajbi(false);
 		GajbeTab.getInstance().setIzmenaUnosaGajbi(false);
 		
-		GajbeTab.getInstance().getUnosUnosaGajbiFP().setDisable(true);    //podesavam prikaz
+		GajbeTab.getInstance().SetUnosZaduzenjaDisable();   //podesavam prikaz
 		GajbeTab.getInstance().getBDodajUnosGajbe().setDisable(false);
 		GajbeTab.getInstance().getBPonistiUnosGajbe().setDisable(true);
 		GajbeTab.getInstance().getBSacuvajUnosGajbe().setDisable(true);
@@ -27,7 +27,7 @@ public class PonistiUnosGajbiKontroler implements EventHandler<ActionEvent> {
 		GajbeTab.getInstance().getCbPrevoznik().setDisable(false);
 		GajbeTab.getInstance().getCbProizvodjac().setDisable(false);
 		GajbeTab.getInstance().getLp1().setDisable(false);
-		GajbeTab.getInstance().getLp2().setDisable(false);
+		//GajbeTab.getInstance().getLp2().setDisable(false);
 		GajbeTab.getInstance().getBSacuvajIStampajUnsoGajbe().setDisable(true);
 		GajbeTab.getInstance().getBStampajUnosGajbe().setDisable(true);
 		new PonisitiPretraguUnosaGajbi().handle(event);

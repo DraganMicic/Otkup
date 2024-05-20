@@ -37,16 +37,18 @@ public class PocetniStage extends Stage{
 		
 		pocetniVB = new VBox(10);
 		pocetniVB.setPadding(new Insets(30,30,30,30));
+		pocetniVB.setStyle("-fx-font: 20px \"Serif\";");
 		
 		VBox dobrodosliVB = new VBox();
-		Label l1 = new Label("Dobrodošli u Otkup v:5.2");
+		Label l1 = new Label("Dobrodošli u Otkup!");
 		l1.setFont(new Font(25));
-		Label l2 = new Label("Code by D.Mićić");
+		Label l2 = new Label("v6.0 by D.Mićić");
 		dobrodosliVB.getChildren().addAll(l1,l2);
 		Label l3 = new Label("Izaberite godinu:");
 		l3.setFont(new Font(25));
 		listaGodina = new ListView<>();
 		listaGodina.setItems(FXCollections.observableList(Firma.getInstance().getGodine()));
+		listaGodina.scrollTo(FXCollections.observableList(Firma.getInstance().getGodine()).size()-1);
 		listaGodina.setPrefHeight(200);
 		
 		listaGodina.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -79,7 +81,7 @@ public class PocetniStage extends Stage{
 		
 		pocetniVB.getChildren().addAll(dobrodosliVB,l3,listaGodina,settingsHB);
 		
-		Scene sc = new Scene(pocetniVB,400,300);
+		Scene sc = new Scene(pocetniVB,400,400);
 		sc.setFill(null);
 		setScene(sc);	
 	}

@@ -22,7 +22,7 @@ public class DodajKontroler implements EventHandler<ActionEvent>{
 		ProizvodjaciTab.getInstance().getTfSifra().setText(String.valueOf(poslednjaSifra+1));
 		ProizvodjaciTab.getInstance().getCbPodrazumevaniPrevoznik().getSelectionModel().selectFirst();
 				
-		ProizvodjaciTab.getInstance().getUnosFP().setDisable(false);   //podesavam prikaz
+		ProizvodjaciTab.getInstance().SetUnosEnable();   //podesavam prikaz
 		ProizvodjaciTab.getInstance().getBDodaj().setDisable(true);		 
 		ProizvodjaciTab.getInstance().getBSacuvaj().setDisable(false);
 		ProizvodjaciTab.getInstance().getBPonisti().setDisable(false);		

@@ -2,6 +2,7 @@ package Prevoz_Tab.Prevoznik_ASCED;
 
 import java.util.Optional;
 
+import BrzUnosUlaza_tab.BrzUnosUlazaTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -12,7 +13,6 @@ import model.Prevoznik;
 import Gajbe_Tab.GajbeTab;
 import Prevoz_Tab.PrevozTab;
 import Proizvodjac_Tab.ProizvodjaciTab;
-import UnosUlaza_Tab.UnosUlazaTab;
 
 public class SacuvajKontroler implements EventHandler<ActionEvent> {
 
@@ -115,7 +115,7 @@ public class SacuvajKontroler implements EventHandler<ActionEvent> {
 		PrevozTab.getInstance().setIzmenaUToku(false);
 			
 		PrevozTab.getInstance().ocistiPoljaZaUnos();		   //podesavam prikaz
-		PrevozTab.getInstance().getUnosHB().setDisable(true);
+		PrevozTab.getInstance().SetuUnosDisable();
 		PrevozTab.getInstance().getBDodaj().setDisable(false);
 		PrevozTab.getInstance().getBSacuvaj().setDisable(true);
 		PrevozTab.getInstance().getBPonisti().setDisable(true);
@@ -126,12 +126,14 @@ public class SacuvajKontroler implements EventHandler<ActionEvent> {
 		
 		ProizvodjaciTab.getInstance().updateTabele();
 		ProizvodjaciTab.getInstance().updateCbPodrazumevaniPrevoznik();
-		UnosUlazaTab.getInstance().updateTabele();
-		UnosUlazaTab.getInstance().updateCBPrevoznik();
+		BrzUnosUlazaTab.getInstance().updateTabele();
+		BrzUnosUlazaTab.getInstance().updateCBPrevoznik();
+		BrzUnosUlazaTab.getInstance().updateCBPrevoznikPretraga();
 		GajbeTab.getInstance().updateTabeleUnosaGajbi();
 		GajbeTab.getInstance().updateCBPrevoznik();
 		GajbeTab.getInstance().updateCBPrevoznikPretraga();
 		GajbeTab.getInstance().updateCBPrevoznikIzvestaj();
 		PrevozTab.getInstance().updateTabelePrevoza();
+		PrevozTab.getInstance().updatecbPrevoznikIzvestaj();
 	}			
 }

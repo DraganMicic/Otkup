@@ -21,7 +21,7 @@ public class DodajKontroler implements EventHandler<ActionEvent>{
 		
 		PrevozTab.getInstance().getTfSifra().setText(String.valueOf(poslednjaSifra+1));
 				
-		PrevozTab.getInstance().getUnosHB().setDisable(false);   //podesavam prikaz
+		PrevozTab.getInstance().SetuUnosEnable();   //podesavam prikaz
 		PrevozTab.getInstance().getBDodaj().setDisable(true);		 
 		PrevozTab.getInstance().getBSacuvaj().setDisable(false);
 		PrevozTab.getInstance().getBPonisti().setDisable(false);		

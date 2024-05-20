@@ -1,10 +1,10 @@
 package BazaUlaza_Tab.Ulaz_ASCED;
 
+import BrzUnosUlaza_tab.BrzUnosUlazaTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import model.Ulaz;
 import BazaUlaza_Tab.BazaUlazaTab;
-import UnosUlaza_Tab.UnosUlazaTab;
 
 public class IzmeniUlazKontroler implements EventHandler<ActionEvent> {
 
@@ -18,13 +18,13 @@ public class IzmeniUlazKontroler implements EventHandler<ActionEvent> {
 		BazaUlazaTab.getInstance().getTfNazivUlaza().setText(u.getNaziv());
 		BazaUlazaTab.getInstance().getTfOpisUlaza().setText(u.getOpis());
 		
-		BazaUlazaTab.getInstance().getUnosUlazaHB().setDisable(false);     //podesavam prikaz 
+		BazaUlazaTab.getInstance().SetUnosUlazaEnable();    //podesavam prikaz
 		BazaUlazaTab.getInstance().getBObrisiUlaz().setDisable(true);
 		BazaUlazaTab.getInstance().getBSacuvajUlaz().setDisable(false);
 		BazaUlazaTab.getInstance().getBIzmeniUlaz().setDisable(true);	
 		
-		UnosUlazaTab.getInstance().updateTabele();
-		UnosUlazaTab.getInstance().updateCBUlaz();
+		BrzUnosUlazaTab.getInstance().updateTabele();
+		BrzUnosUlazaTab.getInstance().updateCBUlaz();
 		BazaUlazaTab.getInstance().updateTabeleCena();
 		BazaUlazaTab.getInstance().updateCbUlaz();
 

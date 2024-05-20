@@ -21,7 +21,7 @@ public class IzmeniKontroler implements EventHandler<ActionEvent> {
 		BazaIzlazaTab.getInstance().getTfCenaPoKom().setText(String.valueOf(i.getCenaPoKomadu()));
 		BazaIzlazaTab.getInstance().getCbJedMere().setValue(Firma.getInstance().stringToJedinicaMere(i.getJedinicaMere()));
 		
-		BazaIzlazaTab.getInstance().getUnosHB().setDisable(false);     //podesavam prikaz 
+		BazaIzlazaTab.getInstance().SetUnosEnable();     //podesavam prikaz
 		BazaIzlazaTab.getInstance().getBObrisi().setDisable(true);
 		BazaIzlazaTab.getInstance().getBSacuvaj().setDisable(false);
 		BazaIzlazaTab.getInstance().getBIzmeni().setDisable(true);

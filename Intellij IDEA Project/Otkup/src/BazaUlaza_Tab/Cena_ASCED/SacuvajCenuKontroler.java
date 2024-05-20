@@ -160,8 +160,7 @@ public class SacuvajCenuKontroler implements EventHandler<ActionEvent> {
 		BazaUlazaTab.getInstance().setIzmenaCeneUToku(false);
 			
 		BazaUlazaTab.getInstance().ocistiPoljaZaUnosCena();		   //podesavam prikaz
-		BazaUlazaTab.getInstance().getUnosiCena1HB().setDisable(true);
-		BazaUlazaTab.getInstance().getUnosiCena2HB().setDisable(true);
+		BazaUlazaTab.getInstance().SetuUnosCenaDisable();
 		BazaUlazaTab.getInstance().getBDodajCenu().setDisable(false);
 		BazaUlazaTab.getInstance().getBSacuvajCenu().setDisable(true);
 		BazaUlazaTab.getInstance().getBPonistiCenu().setDisable(true);

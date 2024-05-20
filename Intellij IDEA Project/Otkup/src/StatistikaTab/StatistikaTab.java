@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.chart.LineChart;
@@ -15,15 +16,18 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import model.*;
 import javafx.scene.control.Label;
 import javafx.util.StringConverter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.time.LocalDate;
 
@@ -31,236 +35,124 @@ public class StatistikaTab extends VBox {
 
     private static StatistikaTab instance;
 
-    private VBox glavni;
+    private HBox UlaziHb;
+    private HBox IzlaziHb;
+    private HBox PiteHb;
 
-    private HBox gornji;
-    private HBox donji;
-
-    private VBox GoreLeviVB;
-    private VBox GoreDesniVB;
-    private VBox DoleLeviVB;
-    private VBox DoleDesniVB;
-
+    private HBox HBUlaziF;
     private ComboBox<Ulaz> CbUlaziF;
     private DatePicker DpUlaziPocetniF;
     private DatePicker DpUlaziKrajnjiF;
     private Button BPonistiUlazF;
-    private HBox HBUlaziF;
     private LineChart<LocalDateTime, Number> UlazLineChart;
 
+    private HBox HbIzlaziF;
     private ComboBox<Izlaz> Cbizlaz;
     private DatePicker DpIzlazzPocetniF;
     private DatePicker DpIzlazKrajnjiF;
     private Button BPonistiIzlazF;
-    private HBox HbIzlaziF;
     private LineChart<LocalDateTime, Number> IzlazLineChart;
 
-    private ComboBox<String> cbPitaGornja;
-    private HBox HBPitaGore;
+    private VBox grafikUlaza;
+    private VBox GrafikIzlaza;
+
+    private VBox pitaUlazaHB;
+    private VBox pitaIzlazaHB;
+
     private PieChart pieChart1;
 
-    private ComboBox<String> cbPitaDonja;
-    private HBox HBPitaDole;
     private PieChart pieChart2;
+
+    private PieChart pieChart3;
+    private PieChart pieChart4;
+    private PieChart pieChart5;
 
 
     private StatistikaTab(){
 
-        glavni = new VBox(10);
-
         setPadding(new Insets(10,20,10,20));  //podesavam ceo tab
         setSpacing(15);
-        this.setScaleX(1);
-        this.setScaleY(1);
+        this.setMinHeight(Screen.getPrimary().getBounds().getHeight()-80);
 
-        gornji = new HBox(20);
-        donji = new HBox(20);
-        GoreLeviVB = new VBox(10);
-        GoreDesniVB = new VBox(10);
-        DoleDesniVB = new VBox(10);
-        DoleLeviVB = new VBox(10);
-        GoreLeviVB.setMinWidth(900);
-        DoleLeviVB.setMinWidth(900);
-        Label naslov = new Label("Statistika:");
+        //naslov 1
+        Label naslov = new Label("Statistika ulaza:");
         naslov.setFont(new Font(35));
-        glavni.getChildren().add(naslov);
-        GoreDesniVB.setAlignment(Pos.TOP_LEFT);
-        DoleDesniVB.setAlignment(Pos.TOP_LEFT);
+        Separator separator = new Separator();
+        this.getChildren().addAll(naslov,separator);
 
-        GoreDesniVB.setStyle("-fx-border-width: 2;" + "-fx-border-color: black;" + "-fx-border-style: dotted;" + "-fx-border-insets: 5;" + "-fx-padding: 10;");
-        GoreLeviVB.setStyle("-fx-border-width: 2;" + "-fx-border-color: black;" + "-fx-border-style: dotted;" + "-fx-border-insets: 5;" + "-fx-padding: 10;");
-        DoleDesniVB.setStyle("-fx-border-width: 2;" + "-fx-border-color: black;" + "-fx-border-style: dotted;" + "-fx-border-insets: 5;" + "-fx-padding: 10;");
-        DoleLeviVB.setStyle("-fx-border-width: 2;" + "-fx-border-color: black;" + "-fx-border-style: dotted;" + "-fx-border-insets: 5;" + "-fx-padding: 10;");
-
-        gornji.getChildren().addAll(GoreLeviVB,GoreDesniVB);
-        donji.getChildren().addAll(DoleLeviVB,DoleDesniVB);
-        glavni.getChildren().addAll(gornji,donji);
-        getChildren().add(glavni);
-
-        ulazi();
-        izlazi();
-        pitaGornja();
-        pitaDonja();
-    }
-
-    private void pitaGornja(){
-        HBPitaGore = new HBox(10);
-        HBPitaGore.setAlignment(Pos.BASELINE_LEFT);
-        Label l0 = new Label("Pita 1:");
-        l0.setFont(new Font(20));
-        HBPitaGore.getChildren().add(l0);
-        cbPitaGornja = new ComboBox<String>();
-        cbPitaGornja.getItems().add("odnos ulaza");
-        cbPitaGornja.getItems().add("odnos izlaz");
-        cbPitaGornja.getSelectionModel().select(0);
-        cbPitaGornja.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null)
-                updatePitaGore();
-        });
-
-        HBPitaGore.getChildren().add(cbPitaGornja);
-        GoreDesniVB.getChildren().add(HBPitaGore);
-
-        pieChart1 = new PieChart();
-        GoreDesniVB.getChildren().add(pieChart1);
-
-        updatePitaGore();
-    }
-
-    private void updatePitaGore(){
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-
-        if (cbPitaGornja.getSelectionModel().getSelectedItem().equals("odnos ulaza")){
-            for(Ulaz u: Firma.getInstance().getTrenutnaGodina().getUlazi()){
-                double kolicina = 0.0;
-                for(UnosUlaza uu: Firma.getInstance().getTrenutnaGodina().getUnosiUlaza()){
-                    if(uu.getUlaz().equals(u))
-                        kolicina+= uu.getKolicinaNeto();
-                }
-                pieChartData.add(new PieChart.Data(u.getNaziv(),kolicina));
-            }
-        }
-        if (cbPitaGornja.getSelectionModel().getSelectedItem().equals("odnos izlaz")){
-            for(Izlaz i: Firma.getInstance().getTrenutnaGodina().getIzlazi()){
-                double kolicina = 0.0;
-                for(UnosIzlaza ui: Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza()){
-                    if(ui.getIzlaz().equals(i))
-                        kolicina+= ui.getKolicina();
-                }
-                pieChartData.add(new PieChart.Data(i.getNaziv(), kolicina));
-            }
-        }
-
-        pieChart1 = new PieChart(pieChartData);
-        pieChart1.setLegendVisible(true);
-        pieChart1.setLabelsVisible(false);
-        pieChart1.setLegendSide(Side.RIGHT);
-        pieChart1.setPrefHeight(300);
-
-        GoreDesniVB.getChildren().remove(1);
-        GoreDesniVB.getChildren().add(1,pieChart1);
-
-    }
-
-    private void pitaDonja(){
-        HBPitaDole = new HBox(10);
-        HBPitaDole.setAlignment(Pos.BASELINE_LEFT);
-        Label l0 = new Label("Pita 2:");
-        l0.setFont(new Font(20));
-        HBPitaDole.getChildren().add(l0);
-        cbPitaDonja = new ComboBox<String>();
-        cbPitaDonja.getItems().add("isplata");
-        cbPitaDonja.getItems().add("gajbe");
-        cbPitaDonja.getItems().add("prevoz");
-
-        cbPitaDonja.getSelectionModel().select(0);
-        cbPitaDonja.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null)
-                updatrePtaDonja();
-        });
-
-        HBPitaDole.getChildren().add(cbPitaDonja);
-        DoleDesniVB.getChildren().add(HBPitaDole);
-
-        pieChart2 = new PieChart();
-        DoleDesniVB.getChildren().add(pieChart2);
-
-        updatrePtaDonja();
-
-    }
-
-    private void updatrePtaDonja(){
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-
-        if (cbPitaDonja.getSelectionModel().getSelectedItem().equals("isplata")){
-            double ukupnoIzlaza = 0.0;
-            for(UnosIzlaza ui: Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza()){
-                ukupnoIzlaza += (ui.getKolicina() * ui.getIzlaz().getCenaPoKomadu());
-            }
-            double ukupnoUlaza = 0.0;
-            for(UnosUlaza uu: Firma.getInstance().getTrenutnaGodina().getUnosiUlaza()){
-                if(uu.getPrevoznik().equals(Firma.getInstance().getTrenutnaGodina().getLicno())) {
-                    ukupnoUlaza += uu.getKolicinaNeto() * (Firma.getInstance().getTrenutnaGodina().cenaZaDatum(uu.getUlaz(), uu.getDatum()).getCenaSaPrevozom() + uu.getProizvodjac().getCenaPlus());
-                }else {
-                    ukupnoUlaza += uu.getKolicinaNeto() * (Firma.getInstance().getTrenutnaGodina().cenaZaDatum(uu.getUlaz(), uu.getDatum()).getCenaBezPrevoza() + uu.getProizvodjac().getCenaPlus());
-                }
-            }
-            pieChartData.add(new PieChart.Data("isplaćeno", ukupnoIzlaza));
-            pieChartData.add(new PieChart.Data("neisplaćeno", ukupnoUlaza-ukupnoIzlaza));
-        }
-
-        if (cbPitaDonja.getSelectionModel().getSelectedItem().equals("prevoz")){
-            double licno = 0.0;
-            double naotkupnom = 0.0;
-            for (UnosUlaza uu : Firma.getInstance().getTrenutnaGodina().getUnosiUlaza()){
-                if(uu.getPrevoznik().equals(Firma.getInstance().getTrenutnaGodina().getLicno()))
-                    licno += uu.getKolicinaNeto();
-                else
-                    naotkupnom += uu.getKolicinaNeto();
-            }
-            pieChartData.add(new PieChart.Data("ličnoo", licno));
-            pieChartData.add(new PieChart.Data("prevoznici", naotkupnom));
-
-        }
-        if (cbPitaDonja.getSelectionModel().getSelectedItem().equals("gajbe")){
-            int ukupnoZaduzenih = 0;
-            int ukupnoRazduzenih = 0;
-            for(UnosGajbi ug : Firma.getInstance().getTrenutnaGodina().getUnosiGajbi()) {
-                ukupnoZaduzenih += ug.getGajbeIzlaz();
-                ukupnoRazduzenih += ug.getGajbeUlaz();
-            }
-            int naTerenu = ukupnoZaduzenih-ukupnoRazduzenih;
-            int ukupnoNaStanju =0;
-            for(Gajba g: Firma.getInstance().getTrenutnaGodina().getGajbe()) {
-                ukupnoNaStanju += g.getUkupnoNaRaspolaganju();
-            }
-            int naStanju = ukupnoNaStanju-naTerenu;
-            pieChartData.add(new PieChart.Data("na stanju", naStanju));
-            pieChartData.add(new PieChart.Data("na terenu", naTerenu));
-
-        }
-
-        pieChart2 = new PieChart(pieChartData);
-        pieChart2.setLegendVisible(false);
-        pieChart2.setLabelsVisible(true);
-        pieChart2.setLegendSide(Side.RIGHT);
-        pieChart2.setPrefHeight(300);
-
-        DoleDesniVB.getChildren().remove(1);
-        DoleDesniVB.getChildren().add(1,pieChart2);
-
-    }
-
-    private void ulazi(){
-
+        //traka za selekciju ulaza
         HBUlaziF = new HBox(10);
+        HBUlaziF.setStyle("-fx-font: 17px \"Serif\";");
         HBUlaziF.setAlignment(Pos.BASELINE_LEFT);
-        Label l0 = new Label("Ulaza:");
-        l0.setFont(new Font(20));
-        HBUlaziF.getChildren().add(l0);
-        HBUlaziF.getChildren().add(new Label("od:"));
+        ulazopcije();
+
+        //grafik ulaza i pita ulaza
+        grafikUlaza = new VBox();
+        grafikUlaza.getChildren().add(HBUlaziF);
+        pitaUlazaHB = new VBox();
+        Label l1 = new Label("Odnos svih ulaza:");
+        l1.setStyle("-fx-font: 17px \"Serif\";");
+        pitaUlazaHB.getChildren().add(l1);
+
+        UlaziHb = new HBox(40);
+        UlaziHb.setStyle("-fx-font: 17px \"System\";");
+        Separator s1 = new Separator();
+        s1.setOrientation(Orientation.VERTICAL);
+        UlaziHb.getChildren().addAll(grafikUlaza,s1,pitaUlazaHB);
+        this.getChildren().add(UlaziHb);
+        tabelaipitaulaza();
+
+        //naslov 2
+        Label naslov2 = new Label("Statistika izlaza:");
+        naslov2.setFont(new Font(35));
+        Separator separator2 = new Separator();
+        this.getChildren().addAll(naslov2,separator2);
+
+        //traka za selekciju izlaza
+        HbIzlaziF = new HBox(10);
+        HbIzlaziF.setStyle("-fx-font: 17px \"Serif\";");
+        HbIzlaziF.setAlignment(Pos.BASELINE_LEFT);
+        izlaziopcije();
+
+        //grafik ulaza i pita izlaza
+        GrafikIzlaza = new VBox();
+        GrafikIzlaza.getChildren().add(HbIzlaziF);
+        pitaIzlazaHB = new VBox();
+        Label l2 = new Label("Odnos svih izlaza:");
+        l2.setStyle("-fx-font: 17px \"Serif\";");
+        pitaIzlazaHB.getChildren().add(l2);
+
+        IzlaziHb = new HBox(40);
+        IzlaziHb.setStyle("-fx-font: 17px \"System\";");
+        Separator s2 = new Separator();
+        s2.setOrientation(Orientation.VERTICAL);
+        IzlaziHb.getChildren().addAll(GrafikIzlaza,s2,pitaIzlazaHB);
+        this.getChildren().add(IzlaziHb);
+        tabelaipitaIzlaz();
+
+        //naslov 3
+        Label naslov3 = new Label("Druge statistike:");
+        naslov3.setFont(new Font(35));
+        Separator separator3 = new Separator();
+        this.getChildren().addAll(naslov3,separator3);
+
+        PiteHb = new HBox(10);
+        PiteHb.setStyle("-fx-font: 17px \"System\";");
+        this.getChildren().add(PiteHb);
+        ostalestatistike();
+
+        //update
+        updateCbUlaz();
+        updateCbIzlaz();
+
+    }
+
+    private void ulazopcije(){
+
+        HBUlaziF.getChildren().add(new Label("Od:"));
 
         DpUlaziPocetniF = new DatePicker();
+        DpUlaziPocetniF.setPrefWidth(160);
         if(Firma.getInstance().getTrenutnaGodina().getUnosiUlaza().size() != 0)
             DpUlaziPocetniF.valueProperty().set(Firma.getInstance().getTrenutnaGodina().getUnosiUlaza().get(0).getDatum());
 
@@ -271,8 +163,10 @@ public class StatistikaTab extends VBox {
         });
 
         HBUlaziF.getChildren().add(DpUlaziPocetniF);
-        HBUlaziF.getChildren().add(new Label("do:"));
+
+        HBUlaziF.getChildren().add(new Label("Do:"));
         DpUlaziKrajnjiF = new DatePicker();
+        DpUlaziKrajnjiF.setPrefWidth(160);
         if(Firma.getInstance().getTrenutnaGodina().getUnosiUlaza().size() != 0)
             DpUlaziKrajnjiF.valueProperty().set(Firma.getInstance().getTrenutnaGodina().getUnosiUlaza().get(Firma.getInstance().getTrenutnaGodina().getUnosiUlaza().size()-1).getDatum());
 
@@ -284,10 +178,12 @@ public class StatistikaTab extends VBox {
         });
 
         HBUlaziF.getChildren().add(DpUlaziKrajnjiF);
-        HBUlaziF.getChildren().add(new Label("ulaz:"));
+        HBUlaziF.getChildren().add(new Label("Ulaz:"));
         CbUlaziF = new ComboBox<Ulaz>();
+        CbUlaziF.setPrefWidth(300);
         HBUlaziF.getChildren().add(CbUlaziF);
-        BPonistiUlazF = new Button("poništi");
+        BPonistiUlazF = new Button("Poništi");
+        BPonistiUlazF.setPrefWidth(110);
         ImageView close = new ImageView(Firma.getInstance().getCloseIco());
         BPonistiUlazF.setGraphic(close);
 
@@ -299,91 +195,76 @@ public class StatistikaTab extends VBox {
         });
 
         HBUlaziF.getChildren().add(BPonistiUlazF);
-        GoreLeviVB.getChildren().add(HBUlaziF);
+
+    }
+
+    private void tabelaipitaulaza(){
 
         DateAxis310 xAxis = new DateAxis310();     ///grafikkk
         NumberAxis yAxis = new NumberAxis();
         UlazLineChart = new LineChart<>(xAxis, yAxis);
-        GoreLeviVB.getChildren().add(UlazLineChart);
+        UlazLineChart.setAnimated(true);
+        UlazLineChart.setPrefWidth(930);
+        grafikUlaza.getChildren().add(UlazLineChart);
         updateGrafikUlaza();
-        //applyDataPointMouseEvents(series);
 
-        updateCbUlaz();
+        pieChart1 = new PieChart();
+        pieChart1.setLegendVisible(true);
+        pieChart1.setLabelsVisible(false);
+        pieChart1.setLegendSide(Side.RIGHT);
+        pieChart1.setPrefHeight(300);
+        pitaUlazaHB.getChildren().add(pieChart1);
+        updatePitaUlaza();
+
     }
 
-    private void izlazi(){
+    private void updatePitaUlaza(){
 
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
 
+        for(Ulaz u: Firma.getInstance().getTrenutnaGodina().getUlazi()){
+            double kolicina = 0.0;
+            for(UnosUlaza uu: Firma.getInstance().getTrenutnaGodina().getUnosiUlaza()){
+                if(uu.getUlaz().equals(u))
+                    kolicina+= uu.getKolicinaNeto();
+            }
+            pieChartData.add(new PieChart.Data(u.getNaziv(),kolicina));
+        }
 
+        pieChart1.getData().clear();
 
-            HbIzlaziF = new HBox(10);
-            HbIzlaziF.setAlignment(Pos.BASELINE_LEFT);
-            Label l0 = new Label("Izlaza:");
-            l0.setFont(new Font(20));
-            HbIzlaziF.getChildren().add(l0);
-            HbIzlaziF.getChildren().add(new Label("od:"));
-            DpIzlazzPocetniF = new DatePicker();
+        FXCollections.sort(pieChartData, Comparator.comparingDouble(PieChart.Data::getPieValue).reversed());
 
-            if(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() != 0)
-                DpIzlazzPocetniF.valueProperty().set(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().get(0).getDatum());
+        ObservableList<PieChart.Data> firstNElements = FXCollections.observableArrayList(
+                pieChartData.subList(0, Math.min(5, pieChartData.size()))
+        );
 
-            DpIzlazzPocetniF.setOnAction(new EventHandler<ActionEvent>() {
-                public void handle(ActionEvent event) {
-                    updateGrafikaIzlaza();
-                }
-            });
-            HbIzlaziF.getChildren().add(DpIzlazzPocetniF);
-            HbIzlaziF.getChildren().add(new Label("do:"));
-            DpIzlazKrajnjiF = new DatePicker();
-            if(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() != 0)
-                DpIzlazKrajnjiF.valueProperty().set(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().get(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() - 1).getDatum());
+        ObservableList<PieChart.Data> otherElements = FXCollections.observableArrayList(
+                pieChartData.subList(5, Math.max(5, pieChartData.size()))
+        );
 
-            DpIzlazKrajnjiF.setOnAction(new EventHandler<ActionEvent>() {
-                public void handle(ActionEvent event) {
-                    updateGrafikaIzlaza();
-                }
-            });
-            HbIzlaziF.getChildren().add(DpIzlazKrajnjiF);
-            HbIzlaziF.getChildren().add(new Label("izlaz:"));
-            Cbizlaz = new ComboBox<Izlaz>();
-            HbIzlaziF.getChildren().add(Cbizlaz);
-            BPonistiIzlazF = new Button("poništi");
-            ImageView close = new ImageView(Firma.getInstance().getCloseIco());
-            BPonistiIzlazF.setGraphic(close);
-            HbIzlaziF.getChildren().add(BPonistiIzlazF);
-            BPonistiIzlazF.setOnAction(e -> {
-                DpIzlazKrajnjiF.valueProperty().set(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().get(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() - 1).getDatum());
-                DpIzlazzPocetniF.valueProperty().set(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().get(0).getDatum());
-                updateCbIzlaz();
-                updateGrafikaIzlaza();
-            });
+        double kolicinaostala = 0.0;
+        for (PieChart.Data d : otherElements){
+            kolicinaostala += d.getPieValue();
+        }
 
-            DoleLeviVB.getChildren().add(HbIzlaziF);
+        firstNElements.add(new PieChart.Data("Ostalo", kolicinaostala));
 
-            DateAxis310 xAxis = new DateAxis310();     ///grafikkk
-            NumberAxis yAxis = new NumberAxis();
-            IzlazLineChart = new LineChart<>(xAxis, yAxis);
-            DoleLeviVB.getChildren().add(IzlazLineChart);
-            updateGrafikaIzlaza();
-            //applyDataPointMouseEvents(series);
-
-            updateCbIzlaz();
-
+        pieChart1.setData(firstNElements);
 
     }
 
     private void updateGrafikUlaza() {
+
         NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("kolicina [kg]");
+        yAxis.setLabel("količina [kg]");
         DateAxis310 xAxis = new DateAxis310();
         xAxis.setTickLabelFormatter(STRING_CONVERTER);
         xAxis.setLabel("dan");
         XYChart.Series series = new XYChart.Series<LocalDateTime, Number>();
-        //series.setName("KURAC");
 
-        UlazLineChart = new LineChart<>(xAxis, yAxis);
+        UlazLineChart.getData().clear();
         UlazLineChart.getData().add(series);
-        UlazLineChart.setAnimated(true);
         UlazLineChart.legendVisibleProperty().set(false);
         xAxis.setTickLabelFormatter(STRING_CONVERTER);
 
@@ -397,23 +278,122 @@ public class StatistikaTab extends VBox {
             }
         }
         series.getData().setAll(data);
-        GoreLeviVB.getChildren().remove(1);
-        GoreLeviVB.getChildren().add(1,UlazLineChart);
+
+    }
+
+    private  void izlaziopcije(){
+
+        HbIzlaziF.getChildren().add(new Label("Od:"));
+        DpIzlazzPocetniF = new DatePicker();
+        DpIzlazzPocetniF.setPrefWidth(160);
+
+        if(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() != 0)
+            DpIzlazzPocetniF.valueProperty().set(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().get(0).getDatum());
+
+        DpIzlazzPocetniF.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                updateGrafikaIzlaza();
+            }
+        });
+        HbIzlaziF.getChildren().add(DpIzlazzPocetniF);
+        HbIzlaziF.getChildren().add(new Label("Do:"));
+        DpIzlazKrajnjiF = new DatePicker();
+        DpIzlazKrajnjiF.setPrefWidth(160);
+        if(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() != 0)
+            DpIzlazKrajnjiF.valueProperty().set(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().get(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() - 1).getDatum());
+
+        DpIzlazKrajnjiF.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                updateGrafikaIzlaza();
+            }
+        });
+        HbIzlaziF.getChildren().add(DpIzlazKrajnjiF);
+        HbIzlaziF.getChildren().add(new Label("Izlaz:"));
+        Cbizlaz = new ComboBox<Izlaz>();
+        Cbizlaz.setPrefWidth(300);
+        HbIzlaziF.getChildren().add(Cbizlaz);
+        BPonistiIzlazF = new Button("poništi");
+        ImageView close = new ImageView(Firma.getInstance().getCloseIco());
+        BPonistiIzlazF.setGraphic(close);
+        BPonistiIzlazF.setPrefWidth(110);
+        HbIzlaziF.getChildren().add(BPonistiIzlazF);
+        BPonistiIzlazF.setOnAction(e -> {
+            DpIzlazKrajnjiF.valueProperty().set(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().get(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() - 1).getDatum());
+            DpIzlazzPocetniF.valueProperty().set(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().get(0).getDatum());
+            updateCbIzlaz();
+            updateGrafikaIzlaza();
+        });
+
+    }
+
+    private void tabelaipitaIzlaz(){
+
+        DateAxis310 xAxis = new DateAxis310();     ///grafikkk
+        NumberAxis yAxis = new NumberAxis();
+        IzlazLineChart = new LineChart<>(xAxis, yAxis);
+        IzlazLineChart.setAnimated(true);
+        IzlazLineChart.setPrefWidth(930);
+        GrafikIzlaza.getChildren().add(IzlazLineChart);
+        updateGrafikaIzlaza();
+
+        pieChart2 = new PieChart();
+        pieChart2.setLegendVisible(true);
+        pieChart2.setLabelsVisible(false);
+        pieChart2.setLegendSide(Side.RIGHT);
+        pieChart2.setPrefHeight(300);
+        pitaIzlazaHB.getChildren().add(pieChart2);
+        updatePitaIzlaza();
+
+    }
+
+    private void updatePitaIzlaza(){
+
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+        for(Izlaz i: Firma.getInstance().getTrenutnaGodina().getIzlazi()){
+            double kolicina = 0.0;
+            for(UnosIzlaza ui: Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza()){
+                if(ui.getIzlaz().equals(i))
+                    kolicina+= ui.getKolicina();
+            }
+            pieChartData.add(new PieChart.Data(i.getNaziv(), kolicina));
+        }
+
+        pieChart2.getData().clear();
+
+        FXCollections.sort(pieChartData, Comparator.comparingDouble(PieChart.Data::getPieValue).reversed());
+
+        ObservableList<PieChart.Data> firstNElements = FXCollections.observableArrayList(
+                pieChartData.subList(0, Math.min(5, pieChartData.size()))
+        );
+
+        ObservableList<PieChart.Data> otherElements = FXCollections.observableArrayList(
+                pieChartData.subList(5, Math.max(5, pieChartData.size()))
+        );
+
+        double kolicinaostala = 0.0;
+        for (PieChart.Data d : otherElements){
+            kolicinaostala += d.getPieValue();
+        }
+
+        firstNElements.add(new PieChart.Data("Ostalo", kolicinaostala));
+
+        pieChart2.setData(firstNElements);
+
 
     }
 
     private void updateGrafikaIzlaza(){
+
         NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("kolicina");
+        yAxis.setLabel("količina");
         DateAxis310 xAxis = new DateAxis310();
         xAxis.setTickLabelFormatter(STRING_CONVERTER);
         xAxis.setLabel("dan");
         XYChart.Series series = new XYChart.Series<LocalDateTime, Number>();
-        //series.setName("KURAC");
 
-        IzlazLineChart = new LineChart<>(xAxis, yAxis);
+        IzlazLineChart.getData().clear();
         IzlazLineChart.getData().add(series);
-        IzlazLineChart.setAnimated(true);
         IzlazLineChart.legendVisibleProperty().set(false);
         xAxis.setTickLabelFormatter(STRING_CONVERTER);
 
@@ -427,15 +407,109 @@ public class StatistikaTab extends VBox {
             }
         }
         series.getData().setAll(data);
-        DoleLeviVB.getChildren().remove(1);
-        DoleLeviVB.getChildren().add(1,IzlazLineChart);
+
+    }
+
+    private void ostalestatistike(){
+
+        pieChart3 = new PieChart();
+        pieChart3.setLegendVisible(false);
+        pieChart3.setLabelsVisible(true);
+        pieChart3.setLegendSide(Side.RIGHT);
+        pieChart3.setPrefHeight(300);
+        pieChart3.setTitle("Isplata:");
+        PiteHb.getChildren().add(pieChart3);
+        updatePitaIsplata();
+
+        pieChart4 = new PieChart();
+        pieChart4.setLegendVisible(false);
+        pieChart4.setLabelsVisible(true);
+        pieChart4.setLegendSide(Side.RIGHT);
+        pieChart4.setPrefHeight(300);
+        pieChart4.setTitle("Ambalaža:");
+        PiteHb.getChildren().add(pieChart4);
+        updatePitaGajbi();
+
+        pieChart5 = new PieChart();
+        pieChart5.setLegendVisible(false);
+        pieChart5.setLabelsVisible(true);
+        pieChart5.setLegendSide(Side.RIGHT);
+        pieChart5.setPrefHeight(300);
+        pieChart5.setTitle("Prevoz:");
+        PiteHb.getChildren().add(pieChart5);
+        updatePitaPrevoza();
+
+    }
+
+    private void updatePitaIsplata(){
+
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+        double ukupnoIzlaza = 0.0;
+        for(UnosIzlaza ui: Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza()){
+            ukupnoIzlaza += (ui.getKolicina() * ui.getIzlaz().getCenaPoKomadu());
+        }
+        double ukupnoUlaza = 0.0;
+        for(UnosUlaza uu: Firma.getInstance().getTrenutnaGodina().getUnosiUlaza()){
+            if(uu.getPrevoznik().equals(Firma.getInstance().getTrenutnaGodina().getLicno())) {
+                ukupnoUlaza += uu.getKolicinaNeto() * (Firma.getInstance().getTrenutnaGodina().cenaZaDatum(uu.getUlaz(), uu.getDatum()).getCenaSaPrevozom() + uu.getProizvodjac().getCenaPlus());
+            }else {
+                ukupnoUlaza += uu.getKolicinaNeto() * (Firma.getInstance().getTrenutnaGodina().cenaZaDatum(uu.getUlaz(), uu.getDatum()).getCenaBezPrevoza() + uu.getProizvodjac().getCenaPlus());
+            }
+        }
+        pieChartData.add(new PieChart.Data("isplaćeno", ukupnoIzlaza));
+        pieChartData.add(new PieChart.Data("neisplaćeno", ukupnoUlaza-ukupnoIzlaza));
+
+        pieChart3.getData().clear();
+        pieChart3.setData(pieChartData);
+
+    }
+
+    private void updatePitaGajbi(){
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+        int ukupnoZaduzenih = 0;
+        int ukupnoRazduzenih = 0;
+        for(UnosGajbi ug : Firma.getInstance().getTrenutnaGodina().getUnosiGajbi()) {
+            ukupnoZaduzenih += ug.getGajbeIzlaz();
+            ukupnoRazduzenih += ug.getGajbeUlaz();
+        }
+        int naTerenu = ukupnoZaduzenih-ukupnoRazduzenih;
+        int ukupnoNaStanju =0;
+        for(Gajba g: Firma.getInstance().getTrenutnaGodina().getGajbe()) {
+            ukupnoNaStanju += g.getUkupnoNaRaspolaganju();
+        }
+        int naStanju = ukupnoNaStanju-naTerenu;
+        pieChartData.add(new PieChart.Data("na stanju", naStanju));
+        pieChartData.add(new PieChart.Data("na terenu", naTerenu));
+
+        pieChart4.getData().clear();
+        pieChart4.setData(pieChartData);
+
+    }
+
+    private void updatePitaPrevoza(){
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+        double licno = 0.0;
+        double naotkupnom = 0.0;
+        for (UnosUlaza uu : Firma.getInstance().getTrenutnaGodina().getUnosiUlaza()){
+            if(uu.getPrevoznik().equals(Firma.getInstance().getTrenutnaGodina().getLicno()))
+                licno += uu.getKolicinaNeto();
+            else
+                naotkupnom += uu.getKolicinaNeto();
+        }
+        pieChartData.add(new PieChart.Data("ličnoo", licno));
+        pieChartData.add(new PieChart.Data("prevoznici", naotkupnom));
+
+        pieChart5.getData().clear();
+        pieChart5.setData(pieChartData);
 
     }
 
     public void updateCbUlaz(){
-        HBUlaziF.getChildren().remove(CbUlaziF);
-        CbUlaziF = new ComboBox<Ulaz>();
-        HBUlaziF.getChildren().add(6,CbUlaziF);
+
+        CbUlaziF.getItems().clear();
         CbUlaziF.getItems().addAll(Firma.getInstance().getTrenutnaGodina().getUlazi());
         CbUlaziF.setTooltip(new Tooltip());
         CbUlaziF.setPromptText("svi ulazi");
@@ -448,9 +522,8 @@ public class StatistikaTab extends VBox {
     }
 
     public void updateCbIzlaz(){
-        HbIzlaziF.getChildren().remove(Cbizlaz);
-        Cbizlaz = new ComboBox<Izlaz>();
-        HbIzlaziF.getChildren().add(6,Cbizlaz);
+
+        Cbizlaz.getItems().clear();
         Cbizlaz.getItems().addAll(Firma.getInstance().getTrenutnaGodina().getIzlazi());
         Cbizlaz.setTooltip(new Tooltip());
         Cbizlaz.setPromptText("svi izlazi");
@@ -471,6 +544,23 @@ public class StatistikaTab extends VBox {
             return LocalDateTime.parse(s);
         }
     };
+
+    public void  setColor(String gore, String dole){
+
+        LinearGradient gradient = new LinearGradient(
+                0, 0, 0, 1, true, javafx.scene.paint.CycleMethod.NO_CYCLE,
+                new javafx.scene.paint.Stop(0, Color.web(gore)),
+                new javafx.scene.paint.Stop(1, Color.web(dole))
+        );
+
+        // Creating a BackgroundFill with the linear gradient
+        BackgroundFill backgroundFill = new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY);
+
+        // Creating a Background with the BackgroundFill
+        Background background = new Background(backgroundFill);
+
+        this.setBackground(background);
+    }
 
     public static StatistikaTab getInstance() {
         if (instance == null) {

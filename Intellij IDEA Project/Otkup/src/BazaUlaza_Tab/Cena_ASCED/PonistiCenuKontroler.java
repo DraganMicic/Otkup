@@ -12,8 +12,7 @@ public class PonistiCenuKontroler implements EventHandler<ActionEvent> {
 		BazaUlazaTab.getInstance().setUnosNoveCene(false);
 		BazaUlazaTab.getInstance().setIzmenaCeneUToku(false);
 		
-		BazaUlazaTab.getInstance().getUnosiCena1HB().setDisable(true);    //podesavam prikaz
-		BazaUlazaTab.getInstance().getUnosiCena2HB().setDisable(true);
+		BazaUlazaTab.getInstance().SetuUnosCenaDisable();   //podesavam prikaz
 		BazaUlazaTab.getInstance().getBDodajCenu().setDisable(false);
 		BazaUlazaTab.getInstance().getBPonistiCenu().setDisable(true);
 		BazaUlazaTab.getInstance().getBSacuvajCenu().setDisable(true);

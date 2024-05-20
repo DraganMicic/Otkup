@@ -11,12 +11,13 @@ import Prevoz_Tab.PrevozTab;
 public class StampajIzvestajKontroler implements EventHandler<ActionEvent> {
 
 	public void handle(ActionEvent event) {
-		if(PrevozTab.getInstance().getTabelaPrevoznika().getSelectionModel().getSelectedItem() == null) {
-			Alert a = new Alert(AlertType.ERROR, "Prevoznik nije selektovan");
+		if(PrevozTab.getInstance().getCbPrevoznikIzvestaj().getValue() == null) {
+			Alert a = new Alert(AlertType.ERROR, "Prevoznik nije selektovan.");
 			a.show();
 			return;	
 		}
-		Prevoznik pre = PrevozTab.getInstance().getTabelaPrevoznika().getSelectionModel().getSelectedItem();
+		Prevoznik pre = PrevozTab.getInstance().getCbPrevoznikIzvestaj().getSelectionModel().getSelectedItem();
+		PrevozTab.getInstance().getCbPrevoznikIzvestaj().getSelectionModel().clearSelection();
 		PrintIzvestajPrevoznika.getInstance().StampajIzvestajPrevoznika(pre);
 		
 	}

@@ -3,6 +3,7 @@ package BazaUlaza_Tab.Ulaz_ASCED;
 
 import java.util.Optional;
 
+import BrzUnosUlaza_tab.BrzUnosUlazaTab;
 import StatistikaTab.StatistikaTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,7 +13,6 @@ import javafx.scene.control.Alert.AlertType;
 import model.Firma;
 import model.Ulaz;
 import BazaUlaza_Tab.BazaUlazaTab;
-import UnosUlaza_Tab.UnosUlazaTab;
 
 public class SacuvajUlazKontroler implements EventHandler<ActionEvent> {
 
@@ -81,17 +81,18 @@ public class SacuvajUlazKontroler implements EventHandler<ActionEvent> {
 		BazaUlazaTab.getInstance().setIzmenaUlazaUToku(false);
 			
 		BazaUlazaTab.getInstance().ocistiPoljaZaUnosUlaza();		   //podesavam prikaz
-		BazaUlazaTab.getInstance().getUnosUlazaHB().setDisable(true);
+		BazaUlazaTab.getInstance().SetUnosUlazaDisable();
 		BazaUlazaTab.getInstance().getBDodajUlaz().setDisable(false);
 		BazaUlazaTab.getInstance().getBSacuvajUlaz().setDisable(true);
 		BazaUlazaTab.getInstance().getBPonistiUlaz().setDisable(true);
 		BazaUlazaTab.getInstance().getBIzmeniUlaz().setDisable(true);
 		BazaUlazaTab.getInstance().getBObrisiUlaz().setDisable(true);	
 		BazaUlazaTab.getInstance().getTabelaUlaza().getSelectionModel().clearSelection();
-		BazaUlazaTab.getInstance().getBDodajUlaz().requestFocus();		
-		
-		UnosUlazaTab.getInstance().updateTabele();
-		UnosUlazaTab.getInstance().updateCBUlaz();
+		BazaUlazaTab.getInstance().getBDodajUlaz().requestFocus();
+
+		BrzUnosUlazaTab.getInstance().updateTabele();
+		BrzUnosUlazaTab.getInstance().updateCBUlaz();
+		BrzUnosUlazaTab.getInstance().updateCBUlazPretraga();
 		BazaUlazaTab.getInstance().updateTabeleCena();
 		BazaUlazaTab.getInstance().updateCbUlaz();
 		StatistikaTab.getInstance().updateCbUlaz();

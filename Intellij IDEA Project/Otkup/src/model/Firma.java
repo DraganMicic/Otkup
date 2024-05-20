@@ -69,7 +69,7 @@ public class Firma {
 		JedinicaMere kg = new JedinicaMere("kg");
 		JedinicaMere kom = new JedinicaMere("kom");
 		JedinicaMere din = new JedinicaMere("din");
-		JedinicaMere sat = new JedinicaMere("sat");
+		JedinicaMere sat = new JedinicaMere("sati");
 		jediniceMere.add(kg);
 		jediniceMere.add(kom);
 		jediniceMere.add(din);

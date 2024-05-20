@@ -19,7 +19,7 @@ public class IzmeniPodesavanjaKontroler implements EventHandler<ActionEvent> {
 		    return;
 		}
 				
-		PodesavanjaTab.getInstance().getPodesavanjaVb().setDisable(false);
+		PodesavanjaTab.getInstance().SetEditEnable();
 		PodesavanjaTab.getInstance().getBSacuvaj().setDisable(false);
 		PodesavanjaTab.getInstance().getBIzmeni().setDisable(true);
 		PodesavanjaTab.getInstance().getBOdustani().setDisable(false);

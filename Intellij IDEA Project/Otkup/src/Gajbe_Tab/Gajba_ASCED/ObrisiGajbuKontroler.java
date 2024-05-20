@@ -1,6 +1,8 @@
 package Gajbe_Tab.Gajba_ASCED;
 
 import java.util.Optional;
+
+import BrzUnosUlaza_tab.BrzUnosUlazaTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -9,7 +11,6 @@ import javafx.scene.control.Alert.AlertType;
 import model.Firma;
 import model.Gajba;
 import Gajbe_Tab.GajbeTab;
-import UnosUlaza_Tab.UnosUlazaTab;
 
 public class ObrisiGajbuKontroler implements EventHandler<ActionEvent> {
 
@@ -36,8 +37,8 @@ public class ObrisiGajbuKontroler implements EventHandler<ActionEvent> {
 		
 		GajbeTab.getInstance().updateTabeleUnosaGajbi();
 		GajbeTab.getInstance().updateCBGajba();
-		UnosUlazaTab.getInstance().updateCBGajba();
-		UnosUlazaTab.getInstance().updateTabele();
+		BrzUnosUlazaTab.getInstance().updateCBGajba();
+		BrzUnosUlazaTab.getInstance().updateTabele();
 		GajbeTab.getInstance().updateCBGajbaPretraga();
 	}
 }

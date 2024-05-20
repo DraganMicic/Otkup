@@ -19,7 +19,7 @@ public class IzmeniKontroler implements EventHandler<ActionEvent> {
 		PrevozTab.getInstance().getTfOpis().setText(p.getOpis());
 		PrevozTab.getInstance().getTfCenaPoKg().setText(String.valueOf(p.getCenaPoKg()));
 		
-		PrevozTab.getInstance().getUnosHB().setDisable(false);     //podesavam prikaz 
+		PrevozTab.getInstance().SetuUnosEnable();     //podesavam prikaz
 		PrevozTab.getInstance().getBObrisi().setDisable(true);
 		PrevozTab.getInstance().getBSacuvaj().setDisable(false);
 		PrevozTab.getInstance().getBIzmeni().setDisable(true);

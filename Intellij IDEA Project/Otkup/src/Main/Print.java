@@ -14,6 +14,14 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
 
 public class Print {
 
@@ -26,8 +34,10 @@ public class Print {
     private Font bold_F = Font.font("Verdana", FontWeight.BOLD, 12);
     private Font bold_Veliki_F = Font.font("Verdana", FontWeight.BOLD, 20);
 
-    private DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.ENGLISH);
+    DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.getDefault());
     private DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
+
+
 
     DateTimeFormatter DateFormater = DateTimeFormatter.ofPattern("dd/MM/YY");
     DateTimeFormatter DateFormater2 = DateTimeFormatter.ofPattern("dd/MM/YYYY");
