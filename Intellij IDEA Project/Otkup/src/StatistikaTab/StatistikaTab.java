@@ -235,22 +235,26 @@ public class StatistikaTab extends VBox {
 
         FXCollections.sort(pieChartData, Comparator.comparingDouble(PieChart.Data::getPieValue).reversed());
 
-        ObservableList<PieChart.Data> firstNElements = FXCollections.observableArrayList(
-                pieChartData.subList(0, Math.min(5, pieChartData.size()))
-        );
+        if(pieChartData.size()>5) {
+            ObservableList<PieChart.Data> firstNElements = FXCollections.observableArrayList(
+                    pieChartData.subList(0, Math.min(5, pieChartData.size()))
+            );
 
-        ObservableList<PieChart.Data> otherElements = FXCollections.observableArrayList(
-                pieChartData.subList(5, Math.max(5, pieChartData.size()))
-        );
+            ObservableList<PieChart.Data> otherElements = FXCollections.observableArrayList(
+                    pieChartData.subList(5, Math.max(5, pieChartData.size()))
+            );
 
-        double kolicinaostala = 0.0;
-        for (PieChart.Data d : otherElements){
-            kolicinaostala += d.getPieValue();
+            double kolicinaostala = 0.0;
+            for (PieChart.Data d : otherElements) {
+                kolicinaostala += d.getPieValue();
+            }
+
+            firstNElements.add(new PieChart.Data("Ostalo", kolicinaostala));
+
+            pieChart1.setData(firstNElements);
+        }else {
+            pieChart1.setData(pieChartData);
         }
-
-        firstNElements.add(new PieChart.Data("Ostalo", kolicinaostala));
-
-        pieChart1.setData(firstNElements);
 
     }
 
@@ -363,22 +367,30 @@ public class StatistikaTab extends VBox {
 
         FXCollections.sort(pieChartData, Comparator.comparingDouble(PieChart.Data::getPieValue).reversed());
 
-        ObservableList<PieChart.Data> firstNElements = FXCollections.observableArrayList(
-                pieChartData.subList(0, Math.min(5, pieChartData.size()))
-        );
+        if(pieChartData.size()>5) {
 
-        ObservableList<PieChart.Data> otherElements = FXCollections.observableArrayList(
-                pieChartData.subList(5, Math.max(5, pieChartData.size()))
-        );
+            ObservableList<PieChart.Data> firstNElements = FXCollections.observableArrayList(
+                    pieChartData.subList(0, Math.min(5, pieChartData.size()))
+            );
 
-        double kolicinaostala = 0.0;
-        for (PieChart.Data d : otherElements){
-            kolicinaostala += d.getPieValue();
+            ObservableList<PieChart.Data> otherElements = FXCollections.observableArrayList(
+                    pieChartData.subList(5, Math.max(5, pieChartData.size()))
+            );
+
+
+
+            double kolicinaostala = 0.0;
+            for (PieChart.Data d : otherElements){
+                kolicinaostala += d.getPieValue();
+            }
+
+            firstNElements.add(new PieChart.Data("Ostalo", kolicinaostala));
+
+            pieChart2.setData(firstNElements);
+        }else {
+            pieChart2.setData(pieChartData);
         }
 
-        firstNElements.add(new PieChart.Data("Ostalo", kolicinaostala));
-
-        pieChart2.setData(firstNElements);
 
 
     }
@@ -466,6 +478,7 @@ public class StatistikaTab extends VBox {
     }
 
     private void updatePitaGajbi(){
+
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
 
         int ukupnoZaduzenih = 0;
