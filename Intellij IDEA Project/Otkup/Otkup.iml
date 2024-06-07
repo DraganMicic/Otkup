@@ -7,7 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -15,6 +14,22 @@
         </CLASSES>
         <JAVADOC />
         <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="lib" level="application" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES />
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/Downloads/javafx-sdk-22.0.1/src.zip!/javafx.base" />
+          <root url="jar://$USER_HOME$/Downloads/javafx-sdk-22.0.1/src.zip!/javafx.controls" />
+          <root url="jar://$USER_HOME$/Downloads/javafx-sdk-22.0.1/src.zip!/javafx.fxml" />
+          <root url="jar://$USER_HOME$/Downloads/javafx-sdk-22.0.1/src.zip!/javafx.graphics" />
+          <root url="jar://$USER_HOME$/Downloads/javafx-sdk-22.0.1/src.zip!/javafx.media" />
+          <root url="jar://$USER_HOME$/Downloads/javafx-sdk-22.0.1/src.zip!/javafx.swing" />
+          <root url="jar://$USER_HOME$/Downloads/javafx-sdk-22.0.1/src.zip!/javafx.web" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>

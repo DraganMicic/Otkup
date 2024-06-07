@@ -42,7 +42,7 @@ public class PocetniStage extends Stage{
 		VBox dobrodosliVB = new VBox();
 		Label l1 = new Label("Dobrodošli u Otkup!");
 		l1.setFont(new Font(25));
-		Label l2 = new Label("v6.0 by D.Mićić");
+		Label l2 = new Label("v6.1 by D.Mićić");
 		dobrodosliVB.getChildren().addAll(l1,l2);
 		Label l3 = new Label("Izaberite godinu:");
 		l3.setFont(new Font(25));
