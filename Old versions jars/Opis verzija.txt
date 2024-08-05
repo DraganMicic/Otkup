@@ -9,3 +9,5 @@ v5.0 popravljeni problemi sa izmenama unosa ulaza, unapredjen izvestaj proizvodj
 v5.1 izmene u ucitavanju podesavanja i u stampi ugovora i odobrenja
 v5.2 popravljen bag sa ucitavanjem statistike kada ne postoji - "greska pri ucitavanju podesavanja" 
 v6.0 Potpuno redizajniran interfejs
+v6.1 Nesto sitno nzm sta
+v6.2 Problem sa statistikom izlaza kada datumi unosa nisu sortirani
