@@ -27,6 +27,7 @@ import javafx.util.StringConverter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.time.LocalDate;
@@ -292,7 +293,8 @@ public class StatistikaTab extends VBox {
         DpIzlazzPocetniF.setPrefWidth(160);
 
         if(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() != 0)
-            DpIzlazzPocetniF.valueProperty().set(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().get(0).getDatum());
+            DpIzlazzPocetniF.valueProperty().set(firstIzlazDate());
+
 
         DpIzlazzPocetniF.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -303,8 +305,10 @@ public class StatistikaTab extends VBox {
         HbIzlaziF.getChildren().add(new Label("Do:"));
         DpIzlazKrajnjiF = new DatePicker();
         DpIzlazKrajnjiF.setPrefWidth(160);
-        if(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() != 0)
-            DpIzlazKrajnjiF.valueProperty().set(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().get(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() - 1).getDatum());
+
+        if(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() != 0){
+            DpIzlazKrajnjiF.valueProperty().set(lastIzlazDate());
+        }
 
         DpIzlazKrajnjiF.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -391,8 +395,6 @@ public class StatistikaTab extends VBox {
             pieChart2.setData(pieChartData);
         }
 
-
-
     }
 
     private void updateGrafikaIzlaza(){
@@ -411,11 +413,19 @@ public class StatistikaTab extends VBox {
 
         List<XYChart.Data<LocalDateTime, Number>> data = new ArrayList<>();
         if(Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza().size() != 0) {
+
+            System.out.println("Pocetni:" + DpIzlazzPocetniF.getValue());
+            System.out.println("Krajnji:" + DpIzlazKrajnjiF.getValue());
+
             for (LocalDate date = DpIzlazzPocetniF.getValue(); !date.isEqual(DpIzlazKrajnjiF.getValue().plusDays(1)); date = date.plusDays(1)) {
-                if (Cbizlaz.getSelectionModel().getSelectedItem() == null)
+                System.out.println("Datum:" + date);
+                if (Cbizlaz.getSelectionModel().getSelectedItem() == null) {
+                    //System.out.println("EVO");
+
                     data.add(new XYChart.Data<>(date.atStartOfDay(), UkupnoSvihIzlazaNaDan(date)));
-                else
+                }else {
                     data.add(new XYChart.Data<>(date.atStartOfDay(), UkupnoIzlazaNaDan(date, Cbizlaz.getSelectionModel().getSelectedItem())));
+                }
             }
         }
         series.getData().setAll(data);
@@ -616,6 +626,22 @@ public class StatistikaTab extends VBox {
                 kolicina += ui.getKolicina();
         }
         return kolicina;
+    }
+
+    private  LocalDate firstIzlazDate(){
+        LocalDate datum = null;
+        ArrayList<UnosIzlaza> list = Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza();
+        UnosIzlaza minDateElement = Collections.min(list, Comparator.comparing(UnosIzlaza::getDatum));
+
+        return  minDateElement.getDatum();
+    }
+
+    private  LocalDate lastIzlazDate(){
+        LocalDate datum = null;
+        ArrayList<UnosIzlaza> list = Firma.getInstance().getTrenutnaGodina().getUnosiIzlaza();
+        UnosIzlaza maxDateElement  = Collections.max(list, Comparator.comparing(UnosIzlaza::getDatum));
+
+        return  maxDateElement .getDatum();
     }
 
 }

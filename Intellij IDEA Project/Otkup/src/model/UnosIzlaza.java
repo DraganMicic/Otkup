@@ -36,6 +36,10 @@ public class UnosIzlaza implements Comparable<UnosIzlaza> {
 		}
 		return 0;
 	}
+
+	public int compareByDateTo(UnosIzlaza other) {
+		return this.datum.compareTo(other.datum);
+	}
 	
 	@Override
 	public boolean equals(Object obj) {
