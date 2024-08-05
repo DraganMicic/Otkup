@@ -584,6 +584,7 @@ public class GajbeTab extends VBox {
 	public void updateCBPrevoznik() {
 
 		cbPrevoznik.getItems().clear();
+		cbPrevoznik.getItems().addAll(Firma.getInstance().getTrenutnaGodina().getPrevoznici());
 		cbPrevoznik.setTooltip(new Tooltip());
 		new ComboBoxAutoComplete<Prevoznik>(cbPrevoznik);
 		updateCBPrevoznikPretraga();
