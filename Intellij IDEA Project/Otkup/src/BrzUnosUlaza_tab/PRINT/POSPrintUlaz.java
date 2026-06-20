@@ -78,8 +78,11 @@ public class POSPrintUlaz {
 	    jmbg.setFont(new Font(12));
 	    Label brGazdinstva = new Label("Broj RPG: " + uu.getProizvodjac().getBrojGazdinstva());
 	    brGazdinstva.setFont(new Font(12));
+	    Label brUgovora = new Label("Broj ugovora: " + uu.getProizvodjac().getSifra() + "/" + godina);
+	    brUgovora.setFont(new Font(12));
+		
 	    Label lajna3 = new Label("-------------------------------------------");
-	    podaciProizvodjacaVB.getChildren().addAll(ime,jmbg,brGazdinstva,lajna3);
+	    podaciProizvodjacaVB.getChildren().addAll(ime,jmbg,brGazdinstva,brUgovora,lajna3);
 	    
 	    VBox proizvodVB = new VBox(-5);
 	    proizvodVB.setAlignment(Pos.TOP_LEFT);

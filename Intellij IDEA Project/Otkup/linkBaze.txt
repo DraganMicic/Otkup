@@ -1,1 +1,3 @@
-jdbc:sqlite:D:\\Otkup\\Test bases\\glavnaBaza.db
+jdbc:sqlite:C:\\Users\\t-dmicic\\OneDrive - Microsoft\\Desktop\\Otkup\\Otkup\\Test bases\\glavnaBaza.db
+
+
